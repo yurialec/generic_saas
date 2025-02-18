@@ -5,9 +5,6 @@ namespace App\Http\Controllers\Tenants;
 use App\Http\Controllers\Controller;
 use App\Models\Tenants\Tenant;
 use App\Services\Tenants\TenantService;
-use DB;
-use Exception;
-use Illuminate\Http\Request;
 
 class TenantController extends Controller
 {
@@ -18,16 +15,9 @@ class TenantController extends Controller
         $this->TenantService = $TenantService;
     }
 
-    public function index($tenant)
+    public function showLoginForm($tenant)
     {
-        $result = DB::table('tenant')
-            ->where('domain', $tenant)
-            ->first();
-
-        if (!empty($result)) {
-            return 'OK ENcontrado!';
-        }
-
-        return 'Não localizado!';
+        $name = Tenant::where('domain', $tenant)->first()->name;
+        return "olá: " . $name;
     }
 }

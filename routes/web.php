@@ -4,7 +4,6 @@ use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\ValidRoutesController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Site\ContactController;
@@ -165,4 +164,17 @@ Route::middleware(['auth'])->group(function () {
 
 });
 
-Route::get('/{tenant}', [TenantController::class, 'index'])->name('tenant.index');
+
+Route::prefix('{tenant}')->group(function () {
+    Route::middleware(['vefifytenant'])->group(function () {
+
+        Route::get('/', [TenantController::class, 'showLoginForm'])->name('tenant.login.form');
+        Route::post('/login', [TenantController::class, 'login'])->name('tenant.login');
+
+        Route::middleware('auth:tenant')->group(function () {
+            Route::get('/dashboard', [TenantController::class, 'dashboard'])->name('tenant.dashboard');
+            Route::post('/logout', [TenantController::class, 'logout'])->name('tenant.logout');
+        });
+    });
+});
+
