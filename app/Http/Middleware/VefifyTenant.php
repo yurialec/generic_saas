@@ -26,7 +26,6 @@ class VefifyTenant
             return abort(404, 'Tenant inválido.');
         }
 
-
         return $next($request);
     }
 }

@@ -5,6 +5,7 @@ mix.js('resources/js/app.js', 'public/js')
     .vue()
     .sass('resources/sass/app.scss', 'public/css')
     .sass('resources/sass/site.scss', 'public/css')
+    .sass('resources/sass/tenant.scss', 'public/css')
     .alias({
         '@': 'resources/components'
     });
