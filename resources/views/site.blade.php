@@ -97,37 +97,6 @@
         @else
         @endif
         <!-- END CAROUSEL -->
-
-        <!-- BLOG -->
-        <div class="container">
-            @if (isset($siteblogs) && $siteblogs->isNotEmpty())
-            <div class="container blog-section text-center">
-                <h2>Blog</h2>
-                <div class="row justify-content-center">
-                    @foreach ($siteblogs as $item)
-                    <div class="col-md-4 d-flex align-items-stretch">
-                        <div class="card blog-card mb-4">
-                            <img class="card-img-top" alt="thumbnail-blog"
-                                src="{{ asset('storage/' . $item->images[0]->image_path) }}">
-                            <div class="card-body">
-                                <p class="card-text">{{ $item->title }}</p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="btn-group">
-                                        <a href="{{ route('site.blog.post', $item->id) }}"
-                                            class="btn btn-sm btn-outline-primary">View</a>
-                                    </div>
-                                    <small class="text-muted">9 mins</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    @endforeach
-                </div>
-            </div>
-            @else
-            @endif
-        </div>
-
     </main>
     <footer id="footer" class="footer light-background">
         <div class="container footer-top">
@@ -149,7 +118,6 @@
                         <li><a href="{{ route('index.site') }}">Início</a></li>
                         <li><a href="{{ route('about') }}">Sobre</a></li>
                         <li><a href="{{ route('contact') }}">Contato</a></li>
-                        <li><a href="{{ route('site.blog.index') }}">Blog</a>
                         <li><a href="{{ route('login') }}">Área Restrita</a>
                     </ul>
                 </div>

@@ -28,7 +28,7 @@
 
 /* Global Colors - The following color variables are used throughout the website. Updating them here will change the color scheme of the entire website */
 :root {
-    --background-color: #F0F8FF;
+    --background-color: #fff;
     /* Background color for the entire website, including individual sections */
     --default-color: #444444;
     /* Default color used for the majority of the text content across the entire website */
@@ -169,6 +169,7 @@ h6 {
     padding: 20px 0;
     transition: all 0.5s;
     z-index: 997;
+    box-shadow: 0px 0 18px rgba(0, 0, 0, 0.1);
 }
 
 .header .logo {
@@ -471,6 +472,7 @@ h6 {
     font-size: 14px;
     padding-bottom: 50px;
     position: relative;
+    box-shadow: 0px 0 18px rgba(0, 0, 0, 0.1);
 }
 
 .footer .footer-top {
@@ -1857,38 +1859,16 @@ section,
 
 //FIM CARROUSEL
 
-//INICIO BLOG
-
-.blog-section {
-    padding: 20px;
-}
-
-.blog-card {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border: none;
+//INICIO DIV PAGINA CONTATO
+.div-contact-page {
     border-radius: 10px;
-    transition: transform 0.2s;
+    background-color: --var(--accent-color);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    bdisplay: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    padding: 70px 0;
 }
 
-.blog-card:hover {
-    transform: translateY(-5px);
-}
-
-.card-img-top {
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    height: 225px;
-    width: 100%;
-    object-fit: cover;
-}
-
-.card-text {
-    font-size: 15px;
-    text-align: left;
-}
-
-.btn-group {
-    text-align: left;
-}
-
-//FIM BLOG
+//FIM DIV PAGINA CONTATO

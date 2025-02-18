@@ -1,19 +1,16 @@
 <?php
 
 use App\Http\Controllers\Admin\MenuController;
-use App\Http\Controllers\Admin\ModuleController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ValidRoutesController;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Blog\BlogController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Site\ContactController;
 use App\Http\Controllers\Site\LogoController;
 use App\Http\Controllers\Site\MainTextController;
 use App\Http\Controllers\Site\SiteAboutController;
-use App\Http\Controllers\Site\SiteBlogController;
 use App\Http\Controllers\Site\SiteCarouselController;
 use App\Http\Controllers\Site\SocialMediaController;
 use App\Http\Controllers\SiteController;
@@ -38,16 +35,12 @@ Route::get('/', [SiteController::class, 'index'])->name('index.site');
 Route::get('/sobre', [SiteController::class, 'about'])->name('about');
 Route::get('/contato', [SiteController::class, 'contact'])->name('contact');
 
-Route::get('/blog', [SiteBlogController::class, 'index'])->name('site.blog.index');
-Route::get('/blog/post/{blog}', [SiteBlogController::class, 'post'])->name('site.blog.post');
-
 Route::middleware(['auth'])->group(function () {
 
     Route::prefix('admin/')->group(function () {
         //dont need acl
         Route::get('home', [HomeController::class, 'index'])->name('home');
         Route::get('menus', [MenuController::class, 'menus'])->name('menus');
-        Route::get('modules/list', [ModuleController::class, 'list'])->name('modules.list');
         Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 
         Route::middleware('acl')->group(function () {
@@ -87,7 +80,6 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/edit/{id}', [PermissionController::class, 'edit'])->name('permissions.edit');
                 Route::post('/update/{id}', [PermissionController::class, 'update'])->name('permissions.update');
                 Route::delete('/delete/{id}', [PermissionController::class, 'delete'])->name('permissions.delete');
-                Route::get('/valid-routes', [ValidRoutesController::class, 'index'])->name('valid.routes.index');
             });
 
             Route::prefix('menu')->group(function () {
@@ -160,16 +152,6 @@ Route::middleware(['auth'])->group(function () {
                     Route::post('/update/{id}', [SocialMediaController::class, 'update'])->name('site.socialmedia.update');
                     Route::delete('/delete/{id}', [SocialMediaController::class, 'delete'])->name('site.socialmedia.delete');
                 });
-            });
-
-            Route::prefix('blog')->group(function () {
-                Route::get('/', [BlogController::class, 'index'])->name('blog.index');
-                Route::get('/list', [BlogController::class, 'list'])->name('blog.list');
-                Route::get('/create', [BlogController::class, 'create'])->name('blog.create');
-                Route::post('/store', [BlogController::class, 'store'])->name('blog.store');
-                Route::get('/edit/{id}', [BlogController::class, 'edit'])->name('blog.edit');
-                Route::post('/update/{id}', [BlogController::class, 'update'])->name('blog.update');
-                Route::delete('/delete/{id}', [BlogController::class, 'delete'])->name('blog.delete');
             });
         });
     });

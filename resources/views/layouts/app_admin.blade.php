@@ -19,30 +19,36 @@
     <link href='https://fonts.googleapis.com/css?family=Open Sans' rel='stylesheet'>
 
     <!-- Scripts -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    @vite(['resources/sass/app.scss', 'resources/sass/chat.scss', 'resources/sass/site.scss', 'resources/js/app.js'])
+
 </head>
 
-<body>
-    <div id="app" class="dashboard">
-        @section('sidebar')
-        @include('admin.theme.sidebar')
-        @show
-        <div class="main">
-            @section('header')
+<body class="sb-nav-fixed">
+    <div id="app">
+        @section('header')
             @include('admin.theme.header')
-            @show
-            <div class="content-wrapper">
-                {{-- <main class="content"> --}}
-                @yield('content')
-                {{-- </main> --}}
+            <div id="layoutSidenav">
+            @section('sidebar')
+                @include('admin.theme.sidebar')
+                <div id="layoutSidenav_content">
+                    <main>
+                        @yield('content')
+                    </main>
+                    <footer class="py-4 bg-light mt-auto">
+                        <div class="container-fluid px-4">
+                            <div class="d-flex align-items-center justify-content-between small">
+                                <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                                <div>
+                                    <a href="#">Privacy Policy</a>
+                                    &middot;
+                                    <a href="#">Terms &amp; Conditions</a>
+                                </div>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
             </div>
-            @section('footer')
-            <footer>
-                &copy; {{ date('Y') }} ProjetoGenerico. Todos os direitos reservados.
-            </footer>
-            @show
         </div>
-    </div>
-</body>
+    </body>
 
-</html>
+    </html>
