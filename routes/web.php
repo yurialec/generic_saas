@@ -14,6 +14,8 @@ use App\Http\Controllers\Site\SiteAboutController;
 use App\Http\Controllers\Site\SiteCarouselController;
 use App\Http\Controllers\Site\SocialMediaController;
 use App\Http\Controllers\SiteController;
+use App\Http\Controllers\Tenants\TenantController;
+use App\Models\Tenants\Tenant;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
@@ -162,3 +164,5 @@ Route::middleware(['auth'])->group(function () {
     });
 
 });
+
+Route::get('/{tenant}', [TenantController::class, 'index'])->name('tenant.index');
