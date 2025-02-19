@@ -17,4 +17,23 @@ class ClientsService
     {
         return $this->ClientsRepository->all();
     }
+
+    public function create($data)
+    {
+        $userData = [
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => $data['password'],
+            'cpf' => $data['cpf'],
+            'function' => $data['function'],
+            'phone' => $data['phone'],
+        ];
+
+        $tenantData = [
+            'name' => $data['name'],
+            'domain' => $data['domain'],
+        ];
+
+        return $this->ClientsRepository->create($userData, $tenantData);
+    }
 }

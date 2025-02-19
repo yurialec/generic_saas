@@ -2,38 +2,88 @@
 
 namespace App\Repositories\Admin;
 
+use App\Enums\RolesEnum;
 use App\Interfaces\Admin\ClientsRepositoryInterface;
 use App\Models\Admin\Clients;
+use App\Models\Admin\Roles;
+use App\Models\Tenants\Tenant;
+use Exception;
+use Log;
 
 class ClientsRepository implements ClientsRepositoryInterface
 {
+    protected $client;
+    protected $tenant;
+
+    public function __construct(Clients $client, Tenant $tenant)
+    {
+        $this->client = $client;
+        $this->tenant = $tenant;
+    }
+
     public function all()
     {
-        return Clients::all();
+        try {
+            return $this->client->with('tenant')->paginate(10);
+        } catch (Exception $err) {
+            Log::error('ERRO', ['erro' => $err->getMessage()]);
+            return $err->getMessage();
+        }
     }
 
     public function find($id)
     {
-        return Clients::find($id);
+        try {
+            return $this->client->find($id);
+        } catch (Exception $err) {
+            Log::error('ERRO', ['erro' => $err->getMessage()]);
+            return $err->getMessage();
+        }
     }
 
-    public function create(array $data)
+    public function create($userData, $tenantData)
     {
-        return Clients::create($data);
+        try {
+            $tenant = $this->tenant->create($tenantData);
+
+            return $this->client->create([
+                'name' => $userData['name'],
+                'email' => $userData['email'],
+                'password' => $userData['password'],
+                'role_id' => Roles::where('name', RolesEnum::Cliente)->first()->id,
+                'tenant_id' => $tenant->id,
+                'cpf' => $userData['cpf'],
+                'function' => $userData['function'],
+                'phone' => $userData['phone'],
+            ]);
+
+        } catch (Exception $err) {
+            Log::error('ERRO', ['erro' => $err->getMessage()]);
+            return $err->getMessage();
+        }
     }
 
     public function update($id, array $data)
     {
-        $model = Clients::find($id);
-        if ($model) {
-            $model->update($data);
-            return $model;
+        try {
+            $client = $this->client->find($id);
+            if ($client) {
+                $client->update($data);
+                return $client;
+            }
+        } catch (Exception $err) {
+            Log::error('ERRO', ['erro' => $err->getMessage()]);
+            return $err->getMessage();
         }
-        return null;
     }
 
     public function delete($id)
     {
-        return Clients::destroy($id);
+        try {
+            return $this->client->destroy($id);
+        } catch (Exception $err) {
+            Log::error('ERRO', ['erro' => $err->getMessage()]);
+            return $err->getMessage();
+        }
     }
 }

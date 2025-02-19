@@ -8,5 +8,8 @@ class Tenant extends Model
 {
     protected $table = 'tenant';
 
-    protected $fillable = ['name'];
+    protected $fillable = [
+        'name',
+        'domain',
+    ];
 }

@@ -24,6 +24,10 @@ class User extends Authenticatable
         'email',
         'password',
         'role_id',
+        'tenant_id',
+        'cpf',
+        'function',
+        'phone',
     ];
 
     protected $with = ['role'];

@@ -11,8 +11,13 @@ return new class extends Migration {
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->bigInteger('tenant_id')->unsigned()->index();
+            $table->bigInteger('role_id')->unsigned()->index();
+            $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
+            $table->bigInteger('tenant_id')->unsigned()->index()->nullable();
             $table->foreign('tenant_id')->references('id')->on('tenant')->onDelete('cascade');
+            $table->string('cpf')->nullable();
+            $table->string('function')->nullable();
+            $table->string('phone')->nullable();
         });
     }
 

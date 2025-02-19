@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ClientsController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\RoleController;
@@ -162,6 +163,18 @@ Route::middleware(['auth'])->group(function () {
                     Route::post('/update/{id}', [SocialMediaController::class, 'update'])->name('site.socialmedia.update');
                     Route::delete('/delete/{id}', [SocialMediaController::class, 'delete'])->name('site.socialmedia.delete');
                 });
+            });
+        });
+
+        Route::middleware(['acl:manter-clientes'])->group(callback: function () {
+            Route::prefix('clients')->group(function () {
+                Route::get('/', [ClientsController::class, 'index'])->name('clients.index');
+                Route::get('/list', [ClientsController::class, 'list'])->name('clients.list');
+                Route::get('/create', [ClientsController::class, 'create'])->name('clients.create');
+                Route::post('/store', [ClientsController::class, 'store'])->name('clients.store');
+                Route::get('/edit/{id}', [ClientsController::class, 'edit'])->name('clients.edit');
+                Route::post('/update/{id}', [ClientsController::class, 'update'])->name('clients.update');
+                Route::delete('/delete/{id}', [ClientsController::class, 'delete'])->name('clients.delete');
             });
         });
     });
