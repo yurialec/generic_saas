@@ -43,9 +43,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('home', [HomeController::class, 'index'])->name('home');
         Route::get('menus', [MenuController::class, 'menus'])->name('menus');
         Route::get('logout', [LoginController::class, 'logout'])->name('logout');
+        Route::get('/profile-view', [UserController::class, 'profileView'])->name('profile.view');
+        Route::get('/profile', [UserController::class, 'profile'])->name('profile');
 
-        Route::middleware('acl')->group(function () {
-
+        Route::middleware(['acl:manter-usuarios'])->group(function () {
             Route::prefix('users')->group(function () {
                 Route::get('/', [UserController::class, 'index'])->name('users.index');
                 Route::get('/list', [UserController::class, 'list'])->name('users.list');
@@ -54,12 +55,10 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/edit/{user}', [UserController::class, 'edit'])->name('users.edit');
                 Route::post('/update/{id}', [UserController::class, 'update'])->name('users.update');
                 Route::delete('/delete/{id}', [UserController::class, 'delete'])->name('users.delete');
-
-                //dont need acl
-                Route::get('/profile-view', [UserController::class, 'profileView'])->name('profile.view');
-                Route::get('/profile', [UserController::class, 'profile'])->name('profile');
             });
+        });
 
+        Route::middleware(['acl:manter-perfis'])->group(callback: function () {
             Route::prefix('roles')->group(function () {
                 Route::get('/', [RoleController::class, 'index'])->name('roles.index');
                 Route::get('/list', [RoleController::class, 'list'])->name('roles.list');
@@ -68,11 +67,11 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/edit/{id}', [RoleController::class, 'edit'])->name('roles.edit');
                 Route::post('/update/{id}', [RoleController::class, 'update'])->name('roles.update');
                 Route::delete('/delete/{id}', [RoleController::class, 'delete'])->name('roles.delete');
-
-                //dont need acl
                 Route::get('/list-permissions', [RoleController::class, 'listPermissions'])->name('roles.list.permissions');
             });
+        });
 
+        Route::middleware(['acl:manter-permissoes'])->group(callback: function () {
             Route::prefix('permissions')->group(function () {
                 Route::get('/', [PermissionController::class, 'index'])->name('permissions.index');
                 Route::get('/list', [PermissionController::class, 'list'])->name('permissions.list');
@@ -82,7 +81,9 @@ Route::middleware(['auth'])->group(function () {
                 Route::post('/update/{id}', [PermissionController::class, 'update'])->name('permissions.update');
                 Route::delete('/delete/{id}', [PermissionController::class, 'delete'])->name('permissions.delete');
             });
+        });
 
+        Route::middleware(['acl:manter-menus'])->group(callback: function () {
             Route::prefix('menu')->group(function () {
                 Route::get('/', [MenuController::class, 'index'])->name('menu.index');
                 Route::get('/list', [MenuController::class, 'list'])->name('menu.list');
@@ -91,9 +92,12 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/edit/{id}', [MenuController::class, 'edit'])->name('menu.edit');
                 Route::post('/update/{id}', [MenuController::class, 'update'])->name('menu.update');
                 Route::delete('/delete/{id}', [MenuController::class, 'delete'])->name('menu.delete');
+                Route::post('/change-order-menu/{id}', [MenuController::class, 'changeOrderMenu'])->name('menu.changeOrderMenu');
             });
+        });
 
-            Route::prefix('site/')->group(function () {
+        Route::prefix('site/')->group(function () {
+            Route::middleware(['acl:manter-logo'])->group(callback: function () {
                 Route::prefix('logo')->group(function () {
                     Route::get('/', [LogoController::class, 'index'])->name('site.logo.index');
                     Route::get('/list', [LogoController::class, 'list'])->name('site.logo.list');
@@ -103,7 +107,8 @@ Route::middleware(['auth'])->group(function () {
                     Route::post('/update/{id}', [LogoController::class, 'update'])->name('site.logo.update');
                     Route::delete('/delete/{id}', [LogoController::class, 'delete'])->name('site.logo.delete');
                 });
-
+            });
+            Route::middleware(['acl:manter-textoprincipal'])->group(callback: function () {
                 Route::prefix('main-text')->group(function () {
                     Route::get('/', [MainTextController::class, 'index'])->name('site.maintext.index');
                     Route::get('/list', [MainTextController::class, 'list'])->name('site.maintext.list');
@@ -113,7 +118,8 @@ Route::middleware(['auth'])->group(function () {
                     Route::post('/update/{id}', [MainTextController::class, 'update'])->name('site.maintext.update');
                     Route::delete('/delete/{id}', [MainTextController::class, 'delete'])->name('site.maintext.delete');
                 });
-
+            });
+            Route::middleware(['acl:manter-carousel'])->group(callback: function () {
                 Route::prefix('carousel')->group(function () {
                     Route::get('/', [SiteCarouselController::class, 'index'])->name('site.carousel.index');
                     Route::get('/list', [SiteCarouselController::class, 'list'])->name('site.carousel.list');
@@ -123,7 +129,8 @@ Route::middleware(['auth'])->group(function () {
                     Route::post('/update/{id}', [SiteCarouselController::class, 'update'])->name('site.carousel.update');
                     Route::delete('/delete/{id}', [SiteCarouselController::class, 'delete'])->name('site.carousel.delete');
                 });
-
+            });
+            Route::middleware(['acl:manter-sobre'])->group(callback: function () {
                 Route::prefix('site-about')->group(function () {
                     Route::get('/', [SiteAboutController::class, 'index'])->name('site.about.index');
                     Route::get('/list', [SiteAboutController::class, 'list'])->name('site.about.list');
@@ -133,7 +140,8 @@ Route::middleware(['auth'])->group(function () {
                     Route::post('/update/{id}', [SiteAboutController::class, 'update'])->name('site.about.update');
                     Route::delete('/delete/{id}', [SiteAboutController::class, 'delete'])->name('site.about.delete');
                 });
-
+            });
+            Route::middleware(['acl:manter-contato'])->group(callback: function () {
                 Route::prefix('contact')->group(function () {
                     Route::get('/', [ContactController::class, 'index'])->name('site.contact.index');
                     Route::get('/list', [ContactController::class, 'list'])->name('site.contact.list');
@@ -143,7 +151,8 @@ Route::middleware(['auth'])->group(function () {
                     Route::post('/update/{id}', [ContactController::class, 'update'])->name('site.contact.update');
                     Route::delete('/delete/{id}', [ContactController::class, 'delete'])->name('site.contact.delete');
                 });
-
+            });
+            Route::middleware(['acl:manter-redes'])->group(callback: function () {
                 Route::prefix('social-media')->group(function () {
                     Route::get('/', [SocialMediaController::class, 'index'])->name('site.socialmedia.index');
                     Route::get('/list', [SocialMediaController::class, 'list'])->name('site.socialmedia.list');
@@ -156,13 +165,13 @@ Route::middleware(['auth'])->group(function () {
             });
         });
     });
-
-    Route::get('/cep/{cep}', function ($cep) {
-        $response = Http::get("https://viacep.com.br/ws/{$cep}/json/");
-        return $response->json();
-    });
-
 });
+
+Route::get('/cep/{cep}', function ($cep) {
+    $response = Http::get("https://viacep.com.br/ws/{$cep}/json/");
+    return $response->json();
+});
+
 
 
 Route::prefix('{tenant}')->group(function () {

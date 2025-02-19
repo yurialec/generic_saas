@@ -55,7 +55,7 @@ export default {
             this.showDropdown = !this.showDropdown;
         },
         getProfile() {
-            axios.get('admin/users/profile')
+            axios.get('admin/profile')
                 .then(response => {
                     this.user = response.data.profile;
                 })

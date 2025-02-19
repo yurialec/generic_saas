@@ -15,7 +15,7 @@ const store = createStore({
     },
     actions: {
         fetchUser({ commit }) {
-            axios.get('admin/users/profile')
+            axios.get('admin/profile')
                 .then(response => {
                     commit('setUser', response.data);
                 })
@@ -24,7 +24,7 @@ const store = createStore({
                 });
         },
         login({ commit }, credentials) {
-            return axios.post('admin/users/profile', credentials)
+            return axios.post('admin/profile', credentials)
                 .then(response => {
                     commit('setUser', response.data.user);
                     // Armazenar no localStorage, se necessário

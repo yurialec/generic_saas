@@ -168,7 +168,7 @@ export default {
         },
         getProfile() {
             this.loading = true;
-            axios.get('admin/users/profile')
+            axios.get('admin/profile')
                 .then(response => {
                     this.user = response.data.profile;
                     this.userProfile.name = this.user.name;
