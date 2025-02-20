@@ -3,7 +3,9 @@
 namespace App\Http\Middleware;
 
 use App\Models\Tenants\Tenant;
+use Auth;
 use Closure;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -14,16 +16,25 @@ class VefifyTenant
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next)
     {
-        $tenantUrl = $request->route('tenant');
-        if (!$tenantUrl) {
-            return abort(404, 'Tenant não encontrado.');
+        // Auth::guard('client')->logout();
+        // session()->forget('user');
+
+        $urlTenant = $request->route('tenant');
+
+        if (!empty(session('user'))) {
+            return redirect()->route('tenant.dashboard', parameters: ['tenant' => $urlTenant]);
         }
 
-        $tenant = Tenant::where('domain', $tenantUrl)->first();
+        if (!$urlTenant) {
+            return response()->json(['Tenant não encontrado.'], 404);
+        }
+
+        $tenant = Tenant::where('domain', $urlTenant)->first();
         if (!$tenant) {
-            return abort(404, 'Tenant inválido.');
+
+            return redirect()->route('tenant.dashboard', parameters: ['tenant' => $urlTenant]);
         }
 
         return $next($request);

@@ -14,6 +14,7 @@ use App\Http\Controllers\Site\SiteAboutController;
 use App\Http\Controllers\Site\SiteCarouselController;
 use App\Http\Controllers\Site\SocialMediaController;
 use App\Http\Controllers\SiteController;
+use App\Http\Controllers\Tenants\AuthTenantController;
 use App\Http\Controllers\Tenants\TenantController;
 use App\Models\Tenants\Tenant;
 use Illuminate\Support\Facades\Auth;
@@ -185,18 +186,15 @@ Route::get('/cep/{cep}', function ($cep) {
     return $response->json();
 });
 
-
-
 Route::prefix('{tenant}')->group(function () {
-    Route::middleware(['vefifytenant'])->group(function () {
+    Route::middleware(['vefifytenant', 'AuthTenant'])->group(function () {
+        Route::get('/', [AuthTenantController::class, 'showLoginForm'])->name('tenant.login.form');
+        Route::post('/login', [AuthTenantController::class, 'login'])->name('tenant.login');
+    });
 
-        Route::get('/', [TenantController::class, 'showLoginForm'])->name('tenant.login.form');
-        Route::post('/login', [TenantController::class, 'login'])->name('tenant.login');
-
-        Route::middleware('auth:tenant')->group(function () {
-            Route::get('/dashboard', [TenantController::class, 'dashboard'])->name('tenant.dashboard');
-            Route::post('/logout', [TenantController::class, 'logout'])->name('tenant.logout');
-        });
+    Route::middleware(['AuthTenant'])->group(function () {
+        Route::get('/dashboard', action: [TenantController::class, 'dashboard'])->name('tenant.dashboard');
+        Route::get('/logout', [AuthTenantController::class, 'logout'])->name('tenant.logout');
     });
 });
 

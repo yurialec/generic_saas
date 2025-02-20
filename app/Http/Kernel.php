@@ -65,5 +65,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'acl' => \App\Http\Middleware\AclMiddleware::class,
         'vefifytenant' => \App\Http\Middleware\VefifyTenant::class,
+        'AuthTenant' => \App\Http\Middleware\AuthTenant::class,
     ];
 }

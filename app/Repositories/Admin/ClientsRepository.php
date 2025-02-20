@@ -8,6 +8,7 @@ use App\Models\Admin\Clients;
 use App\Models\Admin\Roles;
 use App\Models\Tenants\Tenant;
 use Exception;
+use Hash;
 use Log;
 
 class ClientsRepository implements ClientsRepositoryInterface
@@ -49,7 +50,7 @@ class ClientsRepository implements ClientsRepositoryInterface
             return $this->client->create([
                 'name' => $userData['name'],
                 'email' => $userData['email'],
-                'password' => $userData['password'],
+                'password' => Hash::make($userData['password']),
                 'role_id' => Roles::where('name', RolesEnum::Cliente)->first()->id,
                 'tenant_id' => $tenant->id,
                 'cpf' => $userData['cpf'],

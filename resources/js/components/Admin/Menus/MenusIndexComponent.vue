@@ -49,7 +49,7 @@
                             <td><i :class="menu.icon"></i></td>
                             <td>{{ menu.url }}</td>
                             <td>{{ menu.order }}&nbsp;
-                                <button @click="changeOrderMenu(menu.id)" class="btn btn-sm">
+                                <button v-if="menu.order !=1" @click="changeOrderMenu(menu.id)" class="btn btn-sm">
                                     <i class="bi bi-chevron-double-up"></i>
                                 </button>
                             </td>
@@ -58,7 +58,6 @@
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
                                 &nbsp;&nbsp;&nbsp;
-
                                 <button type="button" style="color: red; padding: 0;" class="btn"
                                     @click="confirmExclusion(menu.id)" data-bs-toggle="modal"
                                     data-bs-target="#exampleModal">
@@ -80,7 +79,6 @@
                 </nav>
             </div>
         </div>
-
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
