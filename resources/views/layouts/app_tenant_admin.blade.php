@@ -1,36 +1,78 @@
-<!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+@extends('adminlte::page')
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+{{-- Extend and customize the browser title --}}
 
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+@section('title')
+{{ config('adminlte.title') }}
+@hasSection('subtitle') | @yield('subtitle') @endif
+@stop
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+{{-- Extend and customize the page content header --}}
 
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css">
-    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
-    <link href='https://fonts.googleapis.com/css?family=Open Sans' rel='stylesheet'>
-    <!-- Scripts -->
-    @vite(['resources/sass/tenant_admin.scss', 'resources/js/app.js'])
-</head>
+@section('content_header')
+@hasSection('content_header_title')
+    <h1 class="text-muted">
+        @yield('content_header_title')
 
-<body>
-    <header>
-        <h1>Bem-vindo {{ session('user')['name'] }}</h1>
-    </header>
-    <main>
-        @yield('content')
-    </main>
-    <footer>
-        <p>© 2025 Meu Sistema Multi-Tenant</p>
-    </footer>
-</body>
+        @hasSection('content_header_subtitle')
+            <small class="text-dark">
+                <i class="fas fa-xs fa-angle-right text-muted"></i>
+                @yield('content_header_subtitle')
+            </small>
+        @endif
+    </h1>
+@endif
+@stop
 
-</html>
+{{-- Rename section content to content_body --}}
+
+@section('content')
+@yield('content_body')
+@stop
+
+{{-- Create a common footer --}}
+
+@section('footer')
+<div class="float-right">
+    Version: {{ config('app.version', '1.0.0') }}
+</div>
+
+<strong>
+    <a href="{{ config('app.company_url', '#') }}">
+        {{ config('app.company_name', 'My company') }}
+    </a>
+</strong>
+@stop
+
+{{-- Add common Javascript/Jquery code --}}
+
+@push('js')
+    <script>
+
+        $(document).ready(function () {
+            // Add your common script logic here...
+        });
+
+    </script>
+@endpush
+
+{{-- Add common CSS customizations --}}
+
+@push('css')
+    <style type="text/css">
+        {
+                {
+                -- You can add AdminLTE customizations here --
+            }
+        }
+
+        /*
+        .card-header {
+            border-bottom: none;
+        }
+        .card-title {
+            font-weight: 600;
+        }
+        */
+    </style>
+@endpush
