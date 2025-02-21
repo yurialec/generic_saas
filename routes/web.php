@@ -37,6 +37,7 @@ Auth::routes();
 Route::get('/', [SiteController::class, 'index'])->name('index.site');
 Route::get('/sobre', [SiteController::class, 'about'])->name('about');
 Route::get('/contato', [SiteController::class, 'contact'])->name('contact');
+Route::get('/faca-parte', [SiteController::class, 'facaParte'])->name('faca-parte');
 
 Route::middleware(['auth'])->group(function () {
 

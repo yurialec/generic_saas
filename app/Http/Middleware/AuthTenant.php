@@ -15,21 +15,18 @@ class AuthTenant
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next)
     {
         $urlTenant = $request->route('tenant');
 
         if (!empty(session('user'))) {
             $user = session('user');
             $domain = $user->with('tenant')->first()->tenant->domain;
-
-            return $next($request);
+            if ($domain === $urlTenant) {
+                return $next($request);
+            }
         }
 
-        return redirect()->route('tenant.login.form', parameters: ['tenant' => $urlTenant]);
-
-        // if ($domain !== $urlTenant) {
-        //     return redirect()->route('tenant.login.form', ['tenant' => $urlTenant]);
-        // }
+        return redirect()->route('faca-parte');
     }
 }

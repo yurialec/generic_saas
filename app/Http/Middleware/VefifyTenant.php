@@ -19,20 +19,12 @@ class VefifyTenant
     public function handle(Request $request, Closure $next)
     {
         $urlTenant = $request->route('tenant');
-
-        // if (!empty(session('user'))) {
-        //     return redirect()->route('tenant.dashboard', parameters: ['tenant' => $urlTenant]);
-        // }
-
-        if (!$urlTenant) {
-            return response()->json(['Tenant não encontrado.'], 404);
-        }
-
         $tenant = Tenant::where('domain', $urlTenant)->first();
-        if (!$tenant) {
-            return redirect()->route('tenant.login.form', parameters: ['tenant' => $urlTenant]);
+
+        if (!empty($tenant)) {
+            return $next($request);
         }
 
-        return $next($request);
+        return redirect()->route('faca-parte');
     }
 }
