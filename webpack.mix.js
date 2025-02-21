@@ -6,6 +6,7 @@ mix.js('resources/js/app.js', 'public/js')
     .sass('resources/sass/app.scss', 'public/css')
     .sass('resources/sass/site.scss', 'public/css')
     .sass('resources/sass/tenant.scss', 'public/css')
+    .sass('resources/sass/tenant_admin.scss', 'public/css')
     .alias({
         '@': 'resources/components'
     });

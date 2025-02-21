@@ -1,4 +1,4 @@
-@extends('layouts.app_tenant')
+@extends('layouts.app_tenant_admin')
 @section('content')
     <div class="container">
         <h2>Dashboard do Tenant</h2>

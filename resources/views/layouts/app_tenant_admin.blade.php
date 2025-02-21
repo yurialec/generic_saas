@@ -18,13 +18,19 @@
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
     <link href='https://fonts.googleapis.com/css?family=Open Sans' rel='stylesheet'>
     <!-- Scripts -->
-    @vite(['resources/sass/tenant.scss', 'resources/js/app.js'])
+    @vite(['resources/sass/tenant_admin.scss', 'resources/js/app.js'])
 </head>
 
 <body>
+    <header>
+        <h1>Bem-vindo {{ session('user')['name'] }}</h1>
+    </header>
     <main>
         @yield('content')
     </main>
+    <footer>
+        <p>© 2025 Meu Sistema Multi-Tenant</p>
+    </footer>
 </body>
 
 </html>
