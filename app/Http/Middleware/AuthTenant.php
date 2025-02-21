@@ -19,18 +19,17 @@ class AuthTenant
     {
         $urlTenant = $request->route('tenant');
 
-        $tenant = Tenant::where('domain', $urlTenant)->first();
-        if (!$tenant) {
-            return redirect()->route('index.site');
+        if (!empty(session('user'))) {
+            $user = session('user');
+            $domain = $user->with('tenant')->first()->tenant->domain;
+
+            return $next($request);
         }
 
-        $user = session('user');
-        $domain = $user->with('tenant')->first()->tenant->domain;
+        return redirect()->route('tenant.login.form', parameters: ['tenant' => $urlTenant]);
 
-        if ($domain !== $urlTenant) {
-            return redirect()->route('tenant.login.form', ['tenant' => $urlTenant]);
-        }
-
-        return $next($request);
+        // if ($domain !== $urlTenant) {
+        //     return redirect()->route('tenant.login.form', ['tenant' => $urlTenant]);
+        // }
     }
 }

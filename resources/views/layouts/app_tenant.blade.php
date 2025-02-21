@@ -23,7 +23,7 @@
 
 <body>
     <header>
-        <h1>Bem-vindo {{session('user')['name']}}</h1>
+        <h1>Bem-vindo</h1>
     </header>
     <main>
         @yield('content')

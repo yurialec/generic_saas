@@ -187,7 +187,8 @@ Route::get('/cep/{cep}', function ($cep) {
 });
 
 Route::prefix('{tenant}')->group(function () {
-    Route::middleware(['vefifytenant', 'AuthTenant'])->group(function () {
+    
+    Route::middleware(['vefifytenant'])->group(function () {
         Route::get('/', [AuthTenantController::class, 'showLoginForm'])->name('tenant.login.form');
         Route::post('/login', [AuthTenantController::class, 'login'])->name('tenant.login');
     });
