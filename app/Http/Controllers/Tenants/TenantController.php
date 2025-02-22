@@ -32,4 +32,9 @@ class TenantController extends Controller
             'message' => 'Logout realizado com sucesso!',
         ]);
     }
+
+    public function configuration()
+    {
+        return 'HAHAHAHAHHAHAHAH';
+    }
 }

@@ -25,10 +25,14 @@ class AuthTenantController extends Controller
         ];
 
         try {
+            $tenant = Tenant::where('domain', $urlTenant)->first()->domain;
+
             if (Auth::guard('client')->attempt($credentials)) {
                 $user = Auth::guard('client')->user();
 
                 session(['user' => $user]);
+                session(['tenant' => $tenant]);
+
                 return redirect()->route('tenant.dashboard', ['tenant' => $urlTenant]);
             }
         } catch (Exception $err) {
