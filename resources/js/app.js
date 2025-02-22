@@ -3,6 +3,8 @@ import { createApp, defineAsyncComponent } from 'vue';
 import axios from 'axios';
 import store from './store';
 import { mask } from 'vue-the-mask';
+import $ from 'jquery';
+import 'admin-lte';
 
 let token = document.head.querySelector('meta[name="csrf-token"]');
 if (token) {
@@ -14,6 +16,8 @@ if (token) {
 axios.defaults.baseURL = 'http://localhost:8000/';
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 window.axios = axios;
+
+window.$ = window.jQuery = $;
 
 const app = createApp({});
 app.directive('mask', mask);
