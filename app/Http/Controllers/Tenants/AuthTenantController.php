@@ -44,6 +44,7 @@ class AuthTenantController extends Controller
     {
         Auth::guard('client')->logout();
         session()->forget('user');
+        session()->forget('tenant');
 
         return response()->json([
             'message' => 'Logout realizado com sucesso!',

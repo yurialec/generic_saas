@@ -35,6 +35,6 @@ class TenantController extends Controller
 
     public function configuration()
     {
-        return 'HAHAHAHAHHAHAHAH';
+        return view('tenant.configuration.index');
     }
 }
