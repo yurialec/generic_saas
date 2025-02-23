@@ -1,6 +1,6 @@
 <template>
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
-        <a href="index3.html" class="brand-link">
+        <a :href="urlDashboard" class="brand-link">
             <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/Logo.min.svg" alt="AdminLTE Logo"
                 class="brand-image" style="opacity: .8">
             <span class="brand-text font-weight-light">PSYCOSE</span>
@@ -8,7 +8,7 @@
         <div class="sidebar">
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                 <div class="info">
-                    <a href="#" class="d-block">{{ user.name }}</a>
+                    <a href="#" class="d-block">Meu Perfil</a>
                 </div>
             </div>
             <nav class="mt-2">
@@ -32,6 +32,7 @@
 export default {
     props: {
         user: Object,
+        urlDashboard: String,
     },
     data() {
         return {
@@ -56,7 +57,7 @@ export default {
                     this.menuItems = response.data;
                 })
                 .catch(errors => {
-
+                    
                 }).finally(() => {
                     this.loading = false
                 });

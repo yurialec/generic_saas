@@ -21,15 +21,35 @@ class TenantController extends Controller
     {
         return [
             [
-                'url' => session('tenant') . '/configuration',
+                'url' => route('tenant.reports', ['tenant' => session('tenant')]),
+                'icon' => 'nav-icon fas fa-chart-bar',
+                'name' => 'Relatórios',
+            ],
+            [
+                'url' => route('tenant.finance', ['tenant' => session('tenant')]),
+                'icon' => 'nav-icon fas fa-dollar-sign',
+                'name' => 'Financeiro',
+            ],
+            [
+                'url' => route('tenant.patients', ['tenant' => session('tenant')]),
+                'icon' => 'nav-icon fas fa-user-injured',
+                'name' => 'Paciente',
+            ],
+            [
+                'url' => route('tenant.appointments', ['tenant' => session('tenant')]),
+                'icon' => 'nav-icon fas fa-calendar-alt',
+                'name' => 'Consulta/Agenda',
+            ],
+            [
+                'url' => route('tenant.configuration', ['tenant' => session('tenant')]),
                 'icon' => 'nav-icon fas fa-cogs',
                 'name' => 'Configurações',
             ],
             [
-                'url' => session('tenant') . '/logout',
+                'url' => route('tenant.logout', ['tenant' => session('tenant')]),
                 'icon' => 'nav-icon fas fa-sign-out-alt',
                 'name' => 'Sair',
-            ]
+            ],
         ];
     }
 
@@ -38,15 +58,24 @@ class TenantController extends Controller
         return view('tenant.dashboard.index');
     }
 
-    public function logout(Request $request)
+    public function reports()
     {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        return 'reports';
+    }
 
-        return response()->json([
-            'message' => 'Logout realizado com sucesso!',
-        ]);
+    public function finance()
+    {
+        return 'finance';
+    }
+
+    public function patients()
+    {
+        return 'patients';
+    }
+
+    public function appointments()
+    {
+        return 'appointments';
     }
 
     public function configuration()

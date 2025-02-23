@@ -198,6 +198,10 @@ Route::prefix('{tenant}')->group(function () {
         // Route::get('get-menu'), [TenantController::class, 'dashboard'])->name('tenant.getmenu');
         Route::get('/get-menu', [TenantController::class, 'getMenu'])->name('tenant.getmenu');
         Route::get('/dashboard', [TenantController::class, 'dashboard'])->name('tenant.dashboard');
+        Route::get('/reports', [TenantController::class, 'reports'])->name('tenant.reports');
+        Route::get('/finance', [TenantController::class, 'finance'])->name('tenant.finance');
+        Route::get('/patients', [TenantController::class, 'patients'])->name('tenant.patients');
+        Route::get('/appointments', [TenantController::class, 'appointments'])->name('tenant.appointments');
         Route::get('/configuration', [TenantController::class, 'configuration'])->name('tenant.configuration');
         Route::get('/logout', [AuthTenantController::class, 'logout'])->name('tenant.logout');
     });

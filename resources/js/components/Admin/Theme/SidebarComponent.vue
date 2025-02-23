@@ -39,8 +39,7 @@
                 </div>
             </div>
             <div class="sb-sidenav-footer">
-                Nome: {{ this.userName }}<br>
-                Perfil: {{ this.role }}
+                
             </div>
         </nav>
     </div>

@@ -42,12 +42,12 @@ class AuthTenantController extends Controller
     }
     public function logout(Request $request)
     {
-        Auth::guard('client')->logout();
-        session()->forget('user');
-        session()->forget('tenant');
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
-        return response()->json([
-            'message' => 'Logout realizado com sucesso!',
-        ]);
+        $urlTenant = $request->route('tenant');
+        $name = Tenant::where('domain', $urlTenant)->first()->name;
+        return view('tenant.auth.index', compact('name'));
     }
 }
