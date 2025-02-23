@@ -195,8 +195,10 @@ Route::prefix('{tenant}')->group(function () {
     });
 
     Route::middleware(['AuthTenant'])->group(function () {
-        Route::get('/dashboard', action: [TenantController::class, 'dashboard'])->name('tenant.dashboard');
-        Route::get('/configuration', action: [TenantController::class, 'configuration'])->name('tenant.configuration');
+        // Route::get('get-menu'), [TenantController::class, 'dashboard'])->name('tenant.getmenu');
+        Route::get('/get-menu', [TenantController::class, 'getMenu'])->name('tenant.getmenu');
+        Route::get('/dashboard', [TenantController::class, 'dashboard'])->name('tenant.dashboard');
+        Route::get('/configuration', [TenantController::class, 'configuration'])->name('tenant.configuration');
         Route::get('/logout', [AuthTenantController::class, 'logout'])->name('tenant.logout');
     });
 });

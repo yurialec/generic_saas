@@ -17,6 +17,22 @@ class TenantController extends Controller
         $this->TenantService = $TenantService;
     }
 
+    public function getMenu()
+    {
+        return [
+            [
+                'url' => session('tenant') . '/configuration',
+                'icon' => 'nav-icon fas fa-cogs',
+                'name' => 'Configurações',
+            ],
+            [
+                'url' => session('tenant') . '/logout',
+                'icon' => 'nav-icon fas fa-sign-out-alt',
+                'name' => 'Sair',
+            ]
+        ];
+    }
+
     public function dashboard()
     {
         return view('tenant.dashboard.index');

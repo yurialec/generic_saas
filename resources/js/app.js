@@ -1,7 +1,7 @@
 import './bootstrap';
 import { createApp, defineAsyncComponent } from 'vue';
 import axios from 'axios';
-import store from './store';
+import store from './store'; // Importa o Vuex store
 import { mask } from 'vue-the-mask';
 import $ from 'jquery';
 import 'admin-lte';
@@ -18,7 +18,6 @@ axios.defaults.headers.common['Content-Type'] = 'application/json';
 window.axios = axios;
 
 window.$ = window.jQuery = $;
-
 const app = createApp({});
 app.directive('mask', mask);
 
@@ -29,4 +28,5 @@ Object.entries(components).forEach(([path, importFunction]) => {
 });
 
 app.use(store);
+
 app.mount('#app');

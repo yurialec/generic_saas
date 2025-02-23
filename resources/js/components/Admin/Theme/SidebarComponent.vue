@@ -50,7 +50,7 @@
 export default {
     name: 'Sidebar',
     props: {
-        userName: String,
+        user: String,
         role: String,
     },
     data() {

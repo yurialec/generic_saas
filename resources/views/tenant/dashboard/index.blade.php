@@ -1,8 +1,6 @@
 @extends('layouts.app_tenant_admin')
 @section('content')
     <div class="container">
-        <h2>Bem-vindo {{ session('user')['name'] }}!</h2>
-
         <div class="row">
             <div class="col-lg-3 col-6">
                 <!-- small box -->
