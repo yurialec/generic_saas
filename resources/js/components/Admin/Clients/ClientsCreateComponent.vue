@@ -15,16 +15,17 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Nome</label>
-                                <input type="text" class="form-control" v-model="client.name">
+                                <input type="text" class="form-control" v-model="client.name" required>
                             </div>
                             <div class="form-group">
                                 <label>CPF</label>
-                                <input type="text" class="form-control" v-model="client.cpf">
+                                <input type="text" class="form-control" v-model="client.cpf" required
+                                    v-mask="'###.###.###-##'">
                             </div>
                             <div class="form-group">
                                 <label>E-mail</label>
                                 <input type="text" class="form-control" v-model="client.email" @input="validateEmail"
-                                    autocomplete="off">
+                                    autocomplete="off" required>
                                 <div v-if="validEmail === false" class="alert alert-danger mt-3" role="alert">E-mail
                                     inválido.</div>
                             </div>
@@ -32,15 +33,17 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Telefone</label>
-                                <input type="text" class="form-control" v-model="client.phone">
+                                <input type="text" class="form-control" v-model="client.phone"
+                                    v-mask="['(##) ####-####', '(##) #####-####']" required>
                             </div>
                             <div class="form-group">
                                 <label>Cargo/Função</label>
-                                <input type="text" class="form-control" v-model="client.function">
+                                <input type="text" class="form-control" v-model="client.function" required>
                             </div>
                             <div class="form-group">
                                 <label>CRP</label>
-                                <input type="text" class="form-control" v-model="client.domain">
+                                <input type="text" class="form-control" v-model="client.domain" v-mask="'01/#####'"
+                                    required>
                             </div>
                         </div>
                     </div>
@@ -48,7 +51,7 @@
                         <div class="col-sm">
                             <label>Senha</label>
                             <input :type="inputPass ? 'text' : 'password'" class="form-control"
-                                v-model="client.password" @input="passwordCheck" autocomplete="new-password">
+                                v-model="client.password" @input="passwordCheck" autocomplete="new-password" required>
                         </div>
                         <div class="col-sm">
                             <label>Confirmar senha</label>
@@ -136,21 +139,23 @@ export default {
         },
         save() {
 
-            this.client.password == this.confirmPassword ? this.equalPasswords = true : this.equalPasswords = false;
+            // this.client.password == this.confirmPassword ? this.equalPasswords = true : this.equalPasswords = false;
 
-            if (this.equalPasswords == true) {
-                axios.post('/admin/clients/store', this.client)
-                    .then(response => {
-                        this.alertStatus = true;
-                        this.messages = response.data;
+            // if (this.equalPasswords == true) {
+            //     return;
+            // }
 
-                        window.scrollTo(0, 0);
-                    })
-                    .catch(errors => {
-                        this.alertStatus = false;
-                        this.messages = errors.response;
-                    });
-            }
+            // axios.post('/admin/clients/store', this.client)
+            //     .then(response => {
+            //         this.alertStatus = true;
+            //         this.messages = response.data;
+
+            //         window.scrollTo(0, 0);
+            //     })
+            //     .catch(errors => {
+            //         this.alertStatus = false;
+            //         this.messages = errors.response;
+            //     });
         },
         passwordCheck() {
             if (this.client.password) {
