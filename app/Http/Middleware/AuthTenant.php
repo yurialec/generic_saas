@@ -6,6 +6,7 @@ use App\Models\Tenants\Tenant;
 use Auth;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Routing\RedirectController;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthTenant
@@ -19,14 +20,12 @@ class AuthTenant
     {
         $urlTenant = $request->route('tenant');
 
-        if (!empty(session('user'))) {
-            $user = session('user');
-            $domain = $user->with('tenant')->first()->tenant->domain;
-            if ($domain === $urlTenant) {
-                return $next($request);
-            }
+        if ($urlTenant !== session('tenant')) {
+            return redirect()->route('index.site');
         }
 
-        return redirect()->route('faca-parte');
+        return $next($request);
+
+        // return redirect()->route('tenant.dashboard', ['tenant' => session('tenant')]);
     }
 }

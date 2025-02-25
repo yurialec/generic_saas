@@ -45,12 +45,12 @@ class ClientsController extends Controller
 
     public function store(CreateClientRequest $request)
     {
-        $user = $this->ClientsService->create($request->all());
+        $client = $this->ClientsService->create($request->all());
 
-        if ($user) {
+        if ($client) {
             return response()->json([
                 'status' => true,
-                'user' => $user,
+                'client' => $client,
             ], 200);
         } else {
             return response()->json([

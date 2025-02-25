@@ -22,13 +22,13 @@ class CreateClientRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'requeired',
-            'cpf' => 'requeired',
-            'email' => 'requeired',
-            'phone' => 'requeired',
-            'function' => 'requeired',
-            'domain' => 'requeired',
-            'password' => 'requeired',
+            'name' => 'required',
+            'cpf' => 'required',
+            'email' => 'required',
+            'phone' => 'required',
+            'function' => 'required',
+            'domain' => 'required',
+            'password' => 'required',
         ];
     }
 }

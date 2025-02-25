@@ -5,6 +5,10 @@
         </div>
         <div class="card-body">
             <div class="d-flex justify-content-center">
+                <div v-if="this.alertStatus" class="alert alert-success alert-dismissible fade show" role="alert">
+                    Cliente cadastrado com sucesso
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
                 <form method="POST" action="" @submit.prevent="save()" class="col-lg-8" autocomplete="off">
                     <div v-if="equalPasswords === false" class="alert alert-danger alert-dismissible fade show"
                         role="alert">
@@ -69,7 +73,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="col-sm mt-3">
                         <h6>Requisitos mínimos para a senha:</h6>
                         <small style="color: red;" v-if="!has_six_chars">No mínimo 6 caracteres.</small>
@@ -133,29 +136,52 @@ export default {
     mounted() {
     },
     methods: {
+        sanitizeInput(value) {
+            return value.replace(/[^a-zA-Z0-9]/g, '');
+        },
         validateEmail() {
             const emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
             this.validEmail = emailPattern.test(this.client.email);
         },
         save() {
 
-            // this.client.password == this.confirmPassword ? this.equalPasswords = true : this.equalPasswords = false;
+            this.client.password == this.confirmPassword ? this.equalPasswords = true : this.equalPasswords = false;
 
-            // if (this.equalPasswords == true) {
-            //     return;
-            // }
+            if (this.equalPasswords === false) {
+                alert("Senhas não conferem");
+                return;
+            }
 
-            // axios.post('/admin/clients/store', this.client)
-            //     .then(response => {
-            //         this.alertStatus = true;
-            //         this.messages = response.data;
+            this.client.cpf = this.sanitizeInput(this.client.cpf);
+            this.client.phone = this.sanitizeInput(this.client.phone);
+            this.client.domain = this.sanitizeInput(this.client.domain);
 
-            //         window.scrollTo(0, 0);
-            //     })
-            //     .catch(errors => {
-            //         this.alertStatus = false;
-            //         this.messages = errors.response;
-            //     });
+            let data = {
+                name: this.client.name,
+                cpf: this.client.cpf,
+                email: this.client.email,
+                function: this.client.function,
+                phone: this.client.phone,
+                domain: this.client.domain,
+                password: this.client.password,
+            };
+
+            axios.post('/admin/clients/store', data)
+                .then(response => {
+                    this.alertStatus = true;
+                    window.scrollTo(0, 0);
+
+                    this.client.name = '';
+                    this.client.cpf = '';
+                    this.client.email = '';
+                    this.client.domain = '';
+                    this.client.function = '';
+                    this.client.phone = '';
+                    this.client.password = '';
+                })
+                .catch(errors => {
+                    this.alertStatus = false;
+                });
         },
         passwordCheck() {
             if (this.client.password) {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Tenants;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin\Clients;
 use App\Models\Tenants\Tenant;
 use Auth;
 use Exception;
@@ -23,6 +24,12 @@ class AuthTenantController extends Controller
             'email' => $request->email,
             'password' => $request->password,
         ];
+
+        // $client = Clients::where('email', $request->email)->with('tenant')->first();
+
+        // if ($urlTenant !== $client->tenant->domain) {
+        //     return response("Informe o e-mail correto para realizar login.", 400);
+        // }
 
         try {
             $tenant = Tenant::where('domain', $urlTenant)->first()->domain;
