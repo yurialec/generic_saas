@@ -189,14 +189,14 @@ Route::get('/cep/{cep}', function ($cep) {
 
 Route::prefix('{tenant}')->group(function () {
 
-    // Route::middleware(['vefifytenant'])->group(function () {
-        Route::get('/', [AuthTenantController::class, 'showLoginForm'])->name('tenant.login.form');
-        Route::post('/login', [AuthTenantController::class, 'login'])->name('tenant.login');
-    // });
+    Route::get('/', [AuthTenantController::class, 'showLoginForm'])->name('tenant.login.form');
+    Route::post('/login', [AuthTenantController::class, 'login'])->name('tenant.login');
 
     Route::middleware(['AuthTenant'])->group(function () {
         Route::get('/get-menu', [TenantController::class, 'getMenu'])->name('tenant.getmenu');
         Route::get('/dashboard', [TenantController::class, 'dashboard'])->name('tenant.dashboard');
+        Route::get('/profile', [TenantController::class, 'profile'])->name(name: 'tenant.profile');
+
         Route::get('/reports', [TenantController::class, 'reports'])->name('tenant.reports');
         Route::get('/finance', [TenantController::class, 'finance'])->name('tenant.finance');
         Route::get('/patients', [TenantController::class, 'patients'])->name('tenant.patients');

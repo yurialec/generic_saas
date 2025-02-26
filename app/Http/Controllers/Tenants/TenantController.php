@@ -58,6 +58,11 @@ class TenantController extends Controller
         return view('tenant.dashboard.index');
     }
 
+    public function profile()
+    {
+        return view('tenant.profile.index');
+    }
+
     public function reports()
     {
         return 'reports';

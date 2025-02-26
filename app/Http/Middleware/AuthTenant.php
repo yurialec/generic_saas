@@ -25,7 +25,5 @@ class AuthTenant
         }
 
         return $next($request);
-
-        // return redirect()->route('tenant.dashboard', ['tenant' => session('tenant')]);
     }
 }

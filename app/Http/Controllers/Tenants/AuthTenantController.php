@@ -14,7 +14,16 @@ class AuthTenantController extends Controller
 {
     public function showLoginForm($tenant)
     {
-        $name = Tenant::where('domain', $tenant)->first()->name;
+        $tenant = Tenant::where('domain', $tenant)->first();
+        if (empty($tenant)) {
+            return response("Usuário não localizado.", 400);
+        }
+
+        if (!empty(session('tenant'))) {
+            return redirect()->route('tenant.dashboard', ['tenant' => session('tenant')]);
+        }
+
+        $name = $tenant->name;
         return view('tenant.auth.index', compact('name'));
     }
 
@@ -25,11 +34,17 @@ class AuthTenantController extends Controller
             'password' => $request->password,
         ];
 
-        // $client = Clients::where('email', $request->email)->with('tenant')->first();
+        $client = Clients::where('email', $credentials['email'])
+            ->with('tenant')
+            ->first();
 
-        // if ($urlTenant !== $client->tenant->domain) {
-        //     return response("Informe o e-mail correto para realizar login.", 400);
-        // }
+        if (empty($client)) {
+            return response("Usuário não localizado.", 400);
+        }
+
+        if ($urlTenant !== $client->tenant->domain) {
+            return response("Informe o e-mail correto para realizar login.", 400);
+        }
 
         try {
             $tenant = Tenant::where('domain', $urlTenant)->first()->domain;
