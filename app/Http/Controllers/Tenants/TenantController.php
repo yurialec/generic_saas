@@ -31,7 +31,7 @@ class TenantController extends Controller
                 'name' => 'Financeiro',
             ],
             [
-                'url' => route('tenant.patients', ['tenant' => session('tenant')]),
+                'url' => route('tenant.patient.index', ['tenant' => session('tenant')]),
                 'icon' => 'nav-icon fas fa-user-injured',
                 'name' => 'Paciente',
             ],

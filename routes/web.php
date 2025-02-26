@@ -15,6 +15,7 @@ use App\Http\Controllers\Site\SiteCarouselController;
 use App\Http\Controllers\Site\SocialMediaController;
 use App\Http\Controllers\SiteController;
 use App\Http\Controllers\Tenants\AuthTenantController;
+use App\Http\Controllers\Tenants\PatientController;
 use App\Http\Controllers\Tenants\TenantController;
 use App\Models\Tenants\Tenant;
 use Illuminate\Support\Facades\Auth;
@@ -197,9 +198,12 @@ Route::prefix('{tenant}')->group(function () {
         Route::get('/dashboard', [TenantController::class, 'dashboard'])->name('tenant.dashboard');
         Route::get('/profile', [TenantController::class, 'profile'])->name(name: 'tenant.profile');
 
+        Route::prefix('patients')->group(function () {
+            Route::get('/', [PatientController::class, 'index'])->name('tenant.patient.index');
+        });
+
         Route::get('/reports', [TenantController::class, 'reports'])->name('tenant.reports');
         Route::get('/finance', [TenantController::class, 'finance'])->name('tenant.finance');
-        Route::get('/patients', [TenantController::class, 'patients'])->name('tenant.patients');
         Route::get('/appointments', [TenantController::class, 'appointments'])->name('tenant.appointments');
         Route::get('/configuration', [TenantController::class, 'configuration'])->name('tenant.configuration');
         Route::get('/logout', [AuthTenantController::class, 'logout'])->name('tenant.logout');
