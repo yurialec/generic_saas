@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Tenants;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin\Clients;
 use App\Models\Tenants\Tenant;
 use Auth;
 use Exception;
@@ -13,7 +14,16 @@ class AuthTenantController extends Controller
 {
     public function showLoginForm($tenant)
     {
-        $name = Tenant::where('domain', $tenant)->first()->name;
+        $tenant = Tenant::where('domain', $tenant)->first();
+        if (empty($tenant)) {
+            return response("Usuário não localizado.", 400);
+        }
+
+        if (!empty(session('tenant'))) {
+            return redirect()->route('tenant.dashboard', ['tenant' => session('tenant')]);
+        }
+
+        $name = $tenant->name;
         return view('tenant.auth.index', compact('name'));
     }
 
@@ -24,11 +34,27 @@ class AuthTenantController extends Controller
             'password' => $request->password,
         ];
 
+        $client = Clients::where('email', $credentials['email'])
+            ->with('tenant')
+            ->first();
+
+        if (empty($client)) {
+            return response("Usuário não localizado.", 400);
+        }
+
+        if ($urlTenant !== $client->tenant->domain) {
+            return response("Informe o e-mail correto para realizar login.", 400);
+        }
+
         try {
+            $tenant = Tenant::where('domain', $urlTenant)->first()->domain;
+
             if (Auth::guard('client')->attempt($credentials)) {
                 $user = Auth::guard('client')->user();
 
                 session(['user' => $user]);
+                session(['tenant' => $tenant]);
+
                 return redirect()->route('tenant.dashboard', ['tenant' => $urlTenant]);
             }
         } catch (Exception $err) {
@@ -38,11 +64,12 @@ class AuthTenantController extends Controller
     }
     public function logout(Request $request)
     {
-        Auth::guard('client')->logout();
-        session()->forget('user');
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
-        return response()->json([
-            'message' => 'Logout realizado com sucesso!',
-        ]);
+        $urlTenant = $request->route('tenant');
+        $name = Tenant::where('domain', $urlTenant)->first()->name;
+        return view('tenant.auth.index', compact('name'));
     }
 }

@@ -39,8 +39,7 @@
                 </div>
             </div>
             <div class="sb-sidenav-footer">
-                Nome: {{ this.userName }}<br>
-                Perfil: {{ this.role }}
+                
             </div>
         </nav>
     </div>
@@ -50,7 +49,7 @@
 export default {
     name: 'Sidebar',
     props: {
-        userName: String,
+        user: String,
         role: String,
     },
     data() {

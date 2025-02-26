@@ -5,6 +5,10 @@
         </div>
         <div class="card-body">
             <div class="d-flex justify-content-center">
+                <div v-if="this.alertStatus" class="alert alert-success alert-dismissible fade show" role="alert">
+                    Cliente cadastrado com sucesso
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
                 <form method="POST" action="" @submit.prevent="save()" class="col-lg-8" autocomplete="off">
                     <div v-if="equalPasswords === false" class="alert alert-danger alert-dismissible fade show"
                         role="alert">
@@ -15,16 +19,17 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Nome</label>
-                                <input type="text" class="form-control" v-model="client.name">
+                                <input type="text" class="form-control" v-model="client.name" required>
                             </div>
                             <div class="form-group">
                                 <label>CPF</label>
-                                <input type="text" class="form-control" v-model="client.cpf">
+                                <input type="text" class="form-control" v-model="client.cpf" required
+                                    v-mask="'###.###.###-##'">
                             </div>
                             <div class="form-group">
                                 <label>E-mail</label>
                                 <input type="text" class="form-control" v-model="client.email" @input="validateEmail"
-                                    autocomplete="off">
+                                    autocomplete="off" required>
                                 <div v-if="validEmail === false" class="alert alert-danger mt-3" role="alert">E-mail
                                     inválido.</div>
                             </div>
@@ -32,15 +37,17 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Telefone</label>
-                                <input type="text" class="form-control" v-model="client.phone">
+                                <input type="text" class="form-control" v-model="client.phone"
+                                    v-mask="['(##) ####-####', '(##) #####-####']" required>
                             </div>
                             <div class="form-group">
                                 <label>Cargo/Função</label>
-                                <input type="text" class="form-control" v-model="client.function">
+                                <input type="text" class="form-control" v-model="client.function" required>
                             </div>
                             <div class="form-group">
                                 <label>CRP</label>
-                                <input type="text" class="form-control" v-model="client.domain">
+                                <input type="text" class="form-control" v-model="client.domain" v-mask="'01/#####'"
+                                    required>
                             </div>
                         </div>
                     </div>
@@ -48,7 +55,7 @@
                         <div class="col-sm">
                             <label>Senha</label>
                             <input :type="inputPass ? 'text' : 'password'" class="form-control"
-                                v-model="client.password" @input="passwordCheck" autocomplete="new-password">
+                                v-model="client.password" @input="passwordCheck" autocomplete="new-password" required>
                         </div>
                         <div class="col-sm">
                             <label>Confirmar senha</label>
@@ -66,7 +73,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="col-sm mt-3">
                         <h6>Requisitos mínimos para a senha:</h6>
                         <small style="color: red;" v-if="!has_six_chars">No mínimo 6 caracteres.</small>
@@ -130,6 +136,9 @@ export default {
     mounted() {
     },
     methods: {
+        sanitizeInput(value) {
+            return value.replace(/[^a-zA-Z0-9]/g, '');
+        },
         validateEmail() {
             const emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
             this.validEmail = emailPattern.test(this.client.email);
@@ -138,19 +147,41 @@ export default {
 
             this.client.password == this.confirmPassword ? this.equalPasswords = true : this.equalPasswords = false;
 
-            if (this.equalPasswords == true) {
-                axios.post('/admin/clients/store', this.client)
-                    .then(response => {
-                        this.alertStatus = true;
-                        this.messages = response.data;
-
-                        window.scrollTo(0, 0);
-                    })
-                    .catch(errors => {
-                        this.alertStatus = false;
-                        this.messages = errors.response;
-                    });
+            if (this.equalPasswords === false) {
+                alert("Senhas não conferem");
+                return;
             }
+
+            this.client.cpf = this.sanitizeInput(this.client.cpf);
+            this.client.phone = this.sanitizeInput(this.client.phone);
+            this.client.domain = this.sanitizeInput(this.client.domain);
+
+            let data = {
+                name: this.client.name,
+                cpf: this.client.cpf,
+                email: this.client.email,
+                function: this.client.function,
+                phone: this.client.phone,
+                domain: this.client.domain,
+                password: this.client.password,
+            };
+
+            axios.post('/admin/clients/store', data)
+                .then(response => {
+                    this.alertStatus = true;
+                    window.scrollTo(0, 0);
+
+                    this.client.name = '';
+                    this.client.cpf = '';
+                    this.client.email = '';
+                    this.client.domain = '';
+                    this.client.function = '';
+                    this.client.phone = '';
+                    this.client.password = '';
+                })
+                .catch(errors => {
+                    this.alertStatus = false;
+                });
         },
         passwordCheck() {
             if (this.client.password) {
