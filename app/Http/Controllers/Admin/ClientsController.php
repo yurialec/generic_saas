@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Client\CreateClientRequest;
 use App\Services\Admin\ClientsService;
 use Illuminate\Http\Request;
 
@@ -42,14 +43,14 @@ class ClientsController extends Controller
         return view('admin.clients.create');
     }
 
-    public function store(Request $request)
+    public function store(CreateClientRequest $request)
     {
-        $user = $this->ClientsService->create($request->all());
+        $client = $this->ClientsService->create($request->all());
 
-        if ($user) {
+        if ($client) {
             return response()->json([
                 'status' => true,
-                'user' => $user,
+                'client' => $client,
             ], 200);
         } else {
             return response()->json([

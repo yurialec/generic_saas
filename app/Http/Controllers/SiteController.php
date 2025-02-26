@@ -29,4 +29,9 @@ class SiteController extends Controller
         $contact = $this->contactSite();
         return view('partials.contact.index', compact('contact'));
     }
+
+    public function facaParte()
+    {
+        return 'Entre em contato e faça parte';
+    }
 }

@@ -37,6 +37,7 @@ Auth::routes();
 Route::get('/', [SiteController::class, 'index'])->name('index.site');
 Route::get('/sobre', [SiteController::class, 'about'])->name('about');
 Route::get('/contato', [SiteController::class, 'contact'])->name('contact');
+Route::get('/faca-parte', [SiteController::class, 'facaParte'])->name('faca-parte');
 
 Route::middleware(['auth'])->group(function () {
 
@@ -187,14 +188,20 @@ Route::get('/cep/{cep}', function ($cep) {
 });
 
 Route::prefix('{tenant}')->group(function () {
-    
-    Route::middleware(['vefifytenant'])->group(function () {
-        Route::get('/', [AuthTenantController::class, 'showLoginForm'])->name('tenant.login.form');
-        Route::post('/login', [AuthTenantController::class, 'login'])->name('tenant.login');
-    });
+
+    Route::get('/', [AuthTenantController::class, 'showLoginForm'])->name('tenant.login.form');
+    Route::post('/login', [AuthTenantController::class, 'login'])->name('tenant.login');
 
     Route::middleware(['AuthTenant'])->group(function () {
-        Route::get('/dashboard', action: [TenantController::class, 'dashboard'])->name('tenant.dashboard');
+        Route::get('/get-menu', [TenantController::class, 'getMenu'])->name('tenant.getmenu');
+        Route::get('/dashboard', [TenantController::class, 'dashboard'])->name('tenant.dashboard');
+        Route::get('/profile', [TenantController::class, 'profile'])->name(name: 'tenant.profile');
+
+        Route::get('/reports', [TenantController::class, 'reports'])->name('tenant.reports');
+        Route::get('/finance', [TenantController::class, 'finance'])->name('tenant.finance');
+        Route::get('/patients', [TenantController::class, 'patients'])->name('tenant.patients');
+        Route::get('/appointments', [TenantController::class, 'appointments'])->name('tenant.appointments');
+        Route::get('/configuration', [TenantController::class, 'configuration'])->name('tenant.configuration');
         Route::get('/logout', [AuthTenantController::class, 'logout'])->name('tenant.logout');
     });
 });
