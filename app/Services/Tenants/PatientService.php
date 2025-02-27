@@ -17,4 +17,9 @@ class PatientService
     {
         return $this->PatientRepository->all();
     }
+
+    public function create(array $data)
+    {
+        return $this->PatientRepository->create($data);
+    }
 }

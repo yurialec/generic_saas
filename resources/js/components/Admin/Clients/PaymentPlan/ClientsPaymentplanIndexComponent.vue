@@ -1,5 +1,6 @@
 <template>
-
+    
+    <!-- CRIAR COMPONENTE PARA ALERTAS -->
     <div v-if="this.alertStatus === true" class="alert alert-success alert-dismissible fade show" role="alert">
         <i class="fa-regular fa-circle-check"></i> Registro exluido com sucesso
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -13,22 +14,29 @@
         <div class="card-header">
             <div class="row align-items-center">
                 <div class="col-12 col-md-3 text-md-left text-center mb-2 mb-md-0">
-                    <h3>Pacientes</h3>
+                    <h3>Planos de Pagamento</h3>
                 </div>
                 <div class="col-12 col-md-6 text-center mb-2 mb-md-0">
                     <div class="input-group">
                         <input type="text" class="form-control" v-model="searchFilter" />
                         <button type="button" class="btn btn-primary" @click="pesquisar()">
-                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <i class="bi bi-search"></i>
                         </button>
                     </div>
                 </div>
                 <div class="col-12 col-md-3 text-md-end text-end">
-                    <a :href="urlCreatePatient" type="button" class="btn btn-primary btn-sm">Cadastrar</a>
+                    <a :href="urlCreatePaymentplan" type="button" class="btn btn-primary btn-sm">Cadastrar</a>
                 </div>
             </div>
         </div>
-        <div class="card-body">
+
+        <div v-if="loading" class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+
+        <div v-else class="card-body">
             <div class="row justify-content-center">
                 <div class="table-responsive">
                     <table class="table table-sm table-hover">
@@ -37,34 +45,38 @@
                                 <th scope="col">#</th>
                                 <th scope="col">Nome</th>
                                 <th scope="col">E-mail</th>
+                                <th scope="col">CRP</th>
                                 <th scope="col">Ações</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="patient in patients.data" :key="patient.id">
-                                <th scope="row">{{ patient.id }}</th>
-                                <td>{{ patient.name }}</td>
-                                <td>{{ patient.email }}</td>
+                            <tr v-for="client in clients.data" :key="client.id">
+                                <th scope="row">{{ client.id }}</th>
+                                <td>{{ client.name }}</td>
+                                <td>{{ client.email }}</td>
+                                <td>{{ client.tenant.domain }}</td>
                                 <td>
-                                    <a :href="this.tenant + '/patients/edit/' + patient.id">
-                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    <a :href="'clients/edit/' + client.id">
+                                        <i class="bi bi-pencil-square"></i>
                                     </a>
                                     &nbsp;&nbsp;&nbsp;
                                     <button type="button" style="color: red; padding: 0;" class="btn"
-                                        @click="confirmarExclusao(patient.id)" data-bs-toggle="modal"
+                                        @click="confirmarExclusao(client.id)" data-bs-toggle="modal"
                                         data-bs-target="#exampleModal">
-                                        <i class="fa-solid fa-trash-can"></i> </button>
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
+                <!-- </div> -->
             </div>
         </div>
         <div class="card-footer">
             <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-center">
-                    <li v-for="(link, key) in patients.links" :key="key" class="page-item"
+                    <li v-for="(link, key) in clients.links" :key="key" class="page-item"
                         :class="{ 'active': link.active }">
                         <a class="page-link" href="#" @click.prevent="pagination(link.url)" v-html="link.label"></a>
                     </li>
@@ -97,58 +109,54 @@ import { Modal } from 'bootstrap';
 
 export default {
     props: {
-        urlCreatePatient: String,
-        tenant: String,
+        urlCreatePaymentplan: String,
     },
     data() {
         return {
-            patients: {
+            clients: {
                 data: [],
                 links: []
             },
             searchFilter: '',
-            patientToDelete: null,
+            userToDelete: null,
             alertStatus: null,
             msg: [],
             loading: null,
         };
     },
     mounted() {
-        this.getPatients();
+        this.getUsers();
     },
     methods: {
         pesquisar() {
-            this.getPatients('/' + '0199999' + '/patients/list', this.searchFilter);
+            this.getUsers('admin/clients/list', this.searchFilter);
         },
         pagination(url) {
             if (url) {
-                this.getPatients(url);
+                this.getUsers(url);
             }
         },
-        getPatients(url = '/' + '0199999' + '/patients/list') {
+        getUsers(url = 'admin/clients/list') {
             this.loading = true;
-
-            console.log(url);
-
             axios.get(url)
                 .then(response => {
-                    this.patients = response.data.patients;
+                    this.clients = response.data.clients;
                 })
                 .catch(errors => {
-                    console.log(errors);
+
                 }).finally(() => {
                     this.loading = false
                 });
         },
         confirmarExclusao(userId) {
-            this.patientToDelete = userId;
+            this.userToDelete = userId;
         },
         excluirRegistro() {
-            if (this.patientToDelete !== null) {
-                axios.delete(this.tenant + '/patients/delete/' + this.patientToDelete)
+            if (this.userToDelete !== null) {
+                axios.delete('/admin/users/delete/' + this.userToDelete)
                     .then(response => {
                         this.getUsers();
-                        this.patientToDelete = null;
+                        this.userToDelete = null;
 
                         const modal = Modal.getInstance(document.getElementById('exampleModal'));
                         if (modal) {

@@ -26,7 +26,7 @@ class TenantController extends Controller
                 'name' => 'Relatórios',
             ],
             [
-                'url' => route('tenant.finance', ['tenant' => session('tenant')]),
+                'url' => route('tenant.finance.index', ['tenant' => session('tenant')]),
                 'icon' => 'nav-icon fas fa-dollar-sign',
                 'name' => 'Financeiro',
             ],
