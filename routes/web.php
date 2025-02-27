@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ClientPaymentPlanController;
 use App\Http\Controllers\Admin\ClientsController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\PermissionController;
@@ -15,6 +16,8 @@ use App\Http\Controllers\Site\SiteCarouselController;
 use App\Http\Controllers\Site\SocialMediaController;
 use App\Http\Controllers\SiteController;
 use App\Http\Controllers\Tenants\AuthTenantController;
+use App\Http\Controllers\Tenants\FinanceController;
+use App\Http\Controllers\Tenants\PatientController;
 use App\Http\Controllers\Tenants\TenantController;
 use App\Models\Tenants\Tenant;
 use Illuminate\Support\Facades\Auth;
@@ -177,6 +180,16 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/edit/{id}', [ClientsController::class, 'edit'])->name('clients.edit');
                 Route::post('/update/{id}', [ClientsController::class, 'update'])->name('clients.update');
                 Route::delete('/delete/{id}', [ClientsController::class, 'delete'])->name('clients.delete');
+
+                Route::prefix('payment-plans')->group(function () {
+                    Route::get('/', [ClientPaymentPlanController::class, 'index'])->name('clients.paymentplan.index');
+                    Route::get('/list', [ClientPaymentPlanController::class, 'list'])->name('clients.paymentplan.list');
+                    Route::get('/create', [ClientPaymentPlanController::class, 'create'])->name('clients.paymentplan.create');
+                    Route::post('/store', [ClientPaymentPlanController::class, 'store'])->name('clients.paymentplan.store');
+                    Route::get('/edit/{id}', [ClientPaymentPlanController::class, 'edit'])->name('clients.paymentplan.edit');
+                    Route::post('/update/{id}', [ClientPaymentPlanController::class, 'update'])->name('clients.paymentplan.update');
+                    Route::delete('/delete/{id}', [ClientPaymentPlanController::class, 'delete'])->name('clients.paymentplan.delete');
+                });
             });
         });
     });
@@ -197,9 +210,19 @@ Route::prefix('{tenant}')->group(function () {
         Route::get('/dashboard', [TenantController::class, 'dashboard'])->name('tenant.dashboard');
         Route::get('/profile', [TenantController::class, 'profile'])->name(name: 'tenant.profile');
 
+        Route::prefix('finance')->group(function () {
+            Route::get('/', [FinanceController::class, 'index'])->name('tenant.finance.index');
+            Route::get('/create', [FinanceController::class, 'create'])->name('tenant.finance.create');
+        });
+
+        Route::prefix('patients')->group(function () {
+            Route::get('/', [PatientController::class, 'index'])->name('tenant.patient.index');
+            Route::get('/list', [PatientController::class, 'list'])->name('tenant.patient.list');
+            Route::get('/create', [PatientController::class, 'create'])->name('tenant.patient.create');
+            Route::post('/store', [PatientController::class, 'store'])->name('tenant.patient.store');
+        });
+
         Route::get('/reports', [TenantController::class, 'reports'])->name('tenant.reports');
-        Route::get('/finance', [TenantController::class, 'finance'])->name('tenant.finance');
-        Route::get('/patients', [TenantController::class, 'patients'])->name('tenant.patients');
         Route::get('/appointments', [TenantController::class, 'appointments'])->name('tenant.appointments');
         Route::get('/configuration', [TenantController::class, 'configuration'])->name('tenant.configuration');
         Route::get('/logout', [AuthTenantController::class, 'logout'])->name('tenant.logout');
