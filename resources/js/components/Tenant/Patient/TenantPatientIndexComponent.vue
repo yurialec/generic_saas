@@ -98,7 +98,6 @@ import { Modal } from 'bootstrap';
 export default {
     props: {
         urlCreatePatient: String,
-        tenant: String,
     },
     data() {
         return {
@@ -111,6 +110,7 @@ export default {
             alertStatus: null,
             msg: [],
             loading: null,
+            tenant: tenant,
         };
     },
     mounted() {
@@ -118,18 +118,16 @@ export default {
     },
     methods: {
         pesquisar() {
-            this.getPatients('/' + '0199999' + '/patients/list', this.searchFilter);
+            this.getPatients('/' + this.tenant + '/patients/list', this.searchFilter);
         },
         pagination(url) {
             if (url) {
                 this.getPatients(url);
             }
         },
-        getPatients(url = '/' + '0199999' + '/patients/list') {
+        getPatients() {
             this.loading = true;
-
-            console.log(url);
-
+            let url = '/' + this.tenant + '/patients/list';
             axios.get(url)
                 .then(response => {
                     this.patients = response.data.patients;

@@ -20,6 +20,10 @@
 
     <!-- AdminLTE -->
     <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+
+    <script>
+        window.tenant = @json(session('tenant'));
+    </script>
 </head>
 
 <body class="hold-transition sidebar-mini">

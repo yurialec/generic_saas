@@ -17,6 +17,8 @@ axios.defaults.baseURL = 'http://localhost:8000/';
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 window.axios = axios;
 
+const tenant = window.tenant || null;
+
 window.$ = window.jQuery = $;
 const app = createApp({});
 app.directive('mask', mask);
