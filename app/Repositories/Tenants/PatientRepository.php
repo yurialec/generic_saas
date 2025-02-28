@@ -49,6 +49,7 @@ class PatientRepository implements PatientRepositoryInterface
                 'emergency_phone' => $data['emergency_phone'],
                 'payment_plan' => $data['payment_plan'],
                 'notes' => $data['notes'],
+                'tenant_id' => session('tenant'),
             ]);
         } catch (Exception $err) {
             Log::error('ERRO', ['erro' => $err->getMessage()]);

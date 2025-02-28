@@ -23,45 +23,46 @@
                         </button>
                     </div>
                 </div>
-                <div class="col-12 col-md-3 text-md-end text-end">
-                    <a :href="urlCreatePatient" type="button" class="btn btn-primary btn-sm">Cadastrar</a>
+                <div class="col-12 col-md-3 text-md-end">
+                    <a :href="urlCreatePatient" class="btn btn-primary btn-sm">Cadastrar</a>
                 </div>
             </div>
         </div>
-        <div class="card-body">
-            <div class="row justify-content-center">
-                <div class="table-responsive">
-                    <table class="table table-sm table-hover">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Nome</th>
-                                <th scope="col">E-mail</th>
-                                <th scope="col">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="patient in patients.data" :key="patient.id">
-                                <th scope="row">{{ patient.id }}</th>
-                                <td>{{ patient.name }}</td>
-                                <td>{{ patient.email }}</td>
-                                <td>
-                                    <a :href="this.tenant + '/patients/edit/' + patient.id">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </a>
-                                    &nbsp;&nbsp;&nbsp;
-                                    <button type="button" style="color: red; padding: 0;" class="btn"
-                                        @click="confirmarExclusao(patient.id)" data-bs-toggle="modal"
-                                        data-bs-target="#exampleModal">
-                                        <i class="fa-solid fa-trash-can"></i> </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+        <div v-if="!patients.data.length" class="card-body text-center">
+            <h5>Nenhum resultado encontrado</h5>
+        </div>
+        <div v-else class="card-body">
+            <div class="table-responsive">
+                <table class="table table-sm table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Nome</th>
+                            <th scope="col">E-mail</th>
+                            <th scope="col">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="patient in patients.data" :key="patient.id">
+                            <th scope="row">{{ patient.id }}</th>
+                            <td>{{ patient.name }}</td>
+                            <td>{{ patient.email }}</td>
+                            <td>
+                                <a :href="tenant + '/patients/edit/' + patient.id">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </a>
+                                &nbsp;&nbsp;&nbsp;
+                                <button type="button" class="btn text-danger p-0" @click="confirmarExclusao(patient.id)"
+                                    data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
-        <div class="card-footer">
+        <div class="card-footer" v-if="patients.data.length">
             <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-center">
                     <li v-for="(link, key) in patients.links" :key="key" class="page-item"
@@ -118,7 +119,7 @@ export default {
     },
     methods: {
         pesquisar() {
-            this.getPatients('/' + this.tenant + '/patients/list', this.searchFilter);
+            this.getPatients(this.tenant + '/patients/list', this.searchFilter);
         },
         pagination(url) {
             if (url) {
@@ -127,7 +128,7 @@ export default {
         },
         getPatients() {
             this.loading = true;
-            let url = '/' + this.tenant + '/patients/list';
+            let url = this.tenant + '/patients/list';
             axios.get(url)
                 .then(response => {
                     this.patients = response.data.patients;

@@ -3,12 +3,11 @@
         <div class="card-header">
             <h4>Cadastrar novo paciente</h4>
         </div>
+
+        <!-- <Notifications  :status-type="true" :message="'opa opa'" /> -->
+
         <div class="card-body">
             <div class="d-flex justify-content-center">
-                <div v-if="alertStatus" class="alert alert-success alert-dismissible fade show" role="alert">
-                    Paciente cadastrado com sucesso
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
                 <form method="POST" action="" @submit.prevent="save()" class="col-lg-8" autocomplete="off">
                     <div class="row">
                         <div class="col-md-6">
@@ -33,17 +32,13 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Grupo</label>
-                                <select class="form-select" aria-label="Default select example" v-model="patient.group"
-                                    required>
-                                    <option value="child">Criança</option>
-                                    <option value="teen">Adolescente</option>
-                                    <option value="adult">Adulto</option>
-                                    <option value="elderly">Idoso</option>
+                                <select class="form-select form-control" v-model="patient.group" required>
+                                    <option v-for="(label, key) in getGroups" :value="key">{{ label }}</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>Sexo</label>
-                                <select class="form-select" v-model="patient.gender" required>
+                                <select class="form-select form-control" v-model="patient.gender" required>
                                     <option value="F">Feminino</option>
                                     <option value="M">Masculino</option>
                                     <option value="other">Outros</option>
@@ -84,7 +79,7 @@
                             </div>
                             <div class="form-group">
                                 <label>Plano de pagamento</label>
-                                <select class="form-select" v-model="patient.payment_plan">
+                                <select class="form-select form-control" v-model="patient.payment_plan">
                                     <option value="single">Pagamento único</option>
                                     <option value="monthly">Mensal</option>
                                     <option value="semiannual">Semestral</option>
@@ -117,11 +112,12 @@
 
 <script>
 import axios from 'axios';
+import Notifications from '../../Notifications.vue';
 
 export default {
+    components: { Notifications },
     props: {
         urlIndexPatient: String,
-        tenant: Number,
     },
     data() {
         return {
@@ -141,31 +137,33 @@ export default {
                 notes: ''
             },
             validEmail: null,
-            alertStatus: null
+            tenant: tenant,
         };
     },
-    methods: {
-        sanitizeInput(value) {
-            return value.replace(/[^a-zA-Z0-9]/g, '');
+    computed: {
+        getGroups() {
+            return {
+                "child": 'Criança',
+                "teen": 'Adolescente',
+                "adult": 'Adulto',
+                "elderly": 'Idoso',
+            };
         },
+    },
+    methods: {
         validateEmail() {
             const emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
             this.validEmail = emailPattern.test(this.patient.email);
         },
         save() {
-            // Sanitização dos dados
-            this.patient.cpf = this.sanitizeInput(this.patient.cpf);
-            this.patient.phone = this.sanitizeInput(this.patient.phone);
-
-            axios.post('/0199999/patients/store', this.patient)
-                .then(response => {
-                    this.alertStatus = true;
+            axios.post(this.tenant + '/patients/store', this.patient)
+                .then(() => {
+                    showNotification(true, 'Paciente cadastrado com sucesso');
                     window.scrollTo(0, 0);
                     Object.assign(this.$data.patient, this.$options.data().patient);
                 })
-                .catch(error => {
-                    console.error('Erro ao cadastrar paciente:', error);
-                    this.alertStatus = false;
+                .catch(() => {
+                    showNotification(false, 'Erro ao carregar os dados.');
                 });
         }
     }
