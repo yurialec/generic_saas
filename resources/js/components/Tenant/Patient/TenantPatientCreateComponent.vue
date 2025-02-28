@@ -39,9 +39,7 @@
                             <div class="form-group">
                                 <label>Sexo</label>
                                 <select class="form-select form-control" v-model="patient.gender" required>
-                                    <option value="F">Feminino</option>
-                                    <option value="M">Masculino</option>
-                                    <option value="other">Outros</option>
+                                    <option v-for="(label, key) in getGender" :value="key">{{ label }}</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -59,12 +57,13 @@
                             </div>
                             <div class="form-group">
                                 <label>Responsável (se menor)</label>
-                                <input type="text" class="form-control" v-model="patient.guardian_name">
+                                <input type="text" class="form-control" :require="patient.age < 18"
+                                    v-model="patient.guardian_name">
                             </div>
                             <div class="form-group">
                                 <label>Telefone do responsável</label>
-                                <input type="text" class="form-control" v-model="patient.guardian_phone"
-                                    v-mask="['(##) ####-####', '(##) #####-####']">
+                                <input type="text" class="form-control" :require="patient.age < 18"
+                                    v-model="patient.guardian_phone" v-mask="['(##) ####-####', '(##) #####-####']">
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -79,11 +78,8 @@
                             </div>
                             <div class="form-group">
                                 <label>Plano de pagamento</label>
-                                <select class="form-select form-control" v-model="patient.payment_plan">
-                                    <option value="single">Pagamento único</option>
-                                    <option value="monthly">Mensal</option>
-                                    <option value="semiannual">Semestral</option>
-                                    <option value="annual">Anual</option>
+                                <select class="form-select form-control" v-model="patient.payment_plan" required>
+                                    <option v-for="(label, key) in getPayment" :value="key">{{ label }}</option>
                                 </select>
                             </div>
                         </div>
@@ -149,6 +145,21 @@ export default {
                 "elderly": 'Idoso',
             };
         },
+        getGender() {
+            return {
+                "F": "Feminino",
+                "M": "Masculino",
+                "other": "Outros",
+            }
+        },
+        getPayment() {
+            return {
+                "single": "Pagamento único",
+                "monthly": "Mensal",
+                "semiannual": "Semestral",
+                "annual": "Anual",
+            }
+        }
     },
     methods: {
         validateEmail() {
@@ -157,13 +168,11 @@ export default {
         },
         save() {
             axios.post(this.tenant + '/patients/store', this.patient)
-                .then(() => {
-                    showNotification(true, 'Paciente cadastrado com sucesso');
+                .then((response) => {
                     window.scrollTo(0, 0);
-                    Object.assign(this.$data.patient, this.$options.data().patient);
                 })
                 .catch(() => {
-                    showNotification(false, 'Erro ao carregar os dados.');
+
                 });
         }
     }

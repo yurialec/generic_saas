@@ -34,26 +34,28 @@ class PatientRepository implements PatientRepositoryInterface
     public function create(array $data)
     {
         try {
+            $this->patient->full_name = $data['full_name'];
+            $this->patient->group = $data['group'];
+            $this->patient->gender = $data['gender'];
+            $this->patient->age = $data['age'];
+            $this->patient->cpf = $data['cpf'];
+            $this->patient->email = $data['email'];
+            $this->patient->phone = $data['phone'];
+            $this->patient->guardian_name = $data['guardian_name'];
+            $this->patient->guardian_phone = $data['guardian_phone'];
+            $this->patient->emergency_contact = $data['emergency_contact'];
+            $this->patient->emergency_phone = $data['emergency_phone'];
+            $this->patient->payment_plan = $data['payment_plan'];
+            $this->patient->notes = $data['notes'];
+            $this->patient->tenant_id = (int) session('tenant');
 
-            $patient = $this->patient->create([
-                'full_name' => $data['full_name'],
-                'group' => $data['group'],
-                'gender' => $data['gender'],
-                'age' => $data['age'],
-                'cpf' => $data['cpf'],
-                'email' => $data['email'],
-                'phone' => $data['phone'],
-                'guardian_name' => $data['guardian_name'],
-                'guardian_phone' => $data['guardian_phone'],
-                'emergency_contact' => $data['emergency_contact'],
-                'emergency_phone' => $data['emergency_phone'],
-                'payment_plan' => $data['payment_plan'],
-                'notes' => $data['notes'],
-                'tenant_id' => session('tenant'),
-            ]);
+            $this->patient->save();
+
         } catch (Exception $err) {
             Log::error('ERRO', ['erro' => $err->getMessage()]);
-            return $err->getMessage();
+            return response()->json([
+                'message' => $err->getMessage(),
+            ], 400);
         }
     }
 
