@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Tenants;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Tenant\Patient\StorePatientRequest;
 use App\Services\Tenants\PatientService;
 use Illuminate\Http\Request;
 
@@ -42,9 +43,9 @@ class PatientController extends Controller
         return view('tenant.patient.create');
     }
 
-    public function store(Request $request)
+    public function store(StorePatientRequest $request)
     {
-        $patient = $this->PatientService->create($request->all());
+        $patient = $this->PatientService->create($request->validated());
 
         if ($patient) {
             return response()->json([

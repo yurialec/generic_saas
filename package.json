@@ -25,6 +25,7 @@
         "vue-sweetalert2": "^5.0.11",
         "vue-the-mask": "^0.11.1",
         "vue-upload-multiple-image": "^1.1.6",
+        "vuetify": "^3.7.14",
         "vuex": "^4.0.2"
     }
 }

@@ -4,7 +4,18 @@
             <h4>Cadastrar novo paciente</h4>
         </div>
 
-        <!-- <Notifications  :status-type="true" :message="'opa opa'" /> -->
+        <div class="container mt-3" style="width: 300px;">
+            <v-alert
+                v-model="alert"
+                border="start"
+                color="success"
+                title="Atenção"
+                variant="tonal"
+                close-label="Fechar Alerta"
+                dismissible>
+                Operação realizada com sucesso!
+            </v-alert>
+        </div>
 
         <div class="card-body">
             <div class="d-flex justify-content-center">
@@ -108,10 +119,8 @@
 
 <script>
 import axios from 'axios';
-import Notifications from '../../Notifications.vue';
 
 export default {
-    components: { Notifications },
     props: {
         urlIndexPatient: String,
     },
@@ -120,17 +129,17 @@ export default {
             patient: {
                 group: 'adult',
                 gender: 'F',
-                age: null,
-                full_name: '',
-                cpf: '',
-                email: '',
-                phone: '',
-                guardian_name: '',
-                guardian_phone: '',
-                emergency_contact: '',
-                emergency_phone: '',
+                age: 20,
+                full_name: 'teste',
+                cpf: '030.471.691-01',
+                email: 'yuri.alec@hotmail.com',
+                phone: '616161616161',
+                guardian_name: 'teste',
+                guardian_phone: '616161616161',
+                emergency_contact: 'TESTE',
+                emergency_phone: '616161616161',
                 payment_plan: 'monthly',
-                notes: ''
+                notes: 'TESTETSETSTE'
             },
             validEmail: null,
             tenant: tenant,
@@ -169,9 +178,12 @@ export default {
         save() {
             axios.post(this.tenant + '/patients/store', this.patient)
                 .then((response) => {
-                    window.scrollTo(0, 0);
+                    console.log('cadastrou');
                 })
-                .catch(() => {
+                .catch((errors) => {
+                    console.log('erro ao cadastrar');
+                })
+                .finally(() => {
 
                 });
         }

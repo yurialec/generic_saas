@@ -5,6 +5,16 @@ import store from './store'; // Importa o Vuex store
 import { mask } from 'vue-the-mask';
 import $ from 'jquery';
 import 'admin-lte';
+import { createVuetify } from 'vuetify';
+import { VAlert, VContainer } from 'vuetify/components';
+import 'vuetify/styles';
+
+const vuetify = createVuetify({
+    components: {
+        VAlert,
+        VContainer,
+    },
+});
 
 let token = document.head.querySelector('meta[name="csrf-token"]');
 if (token) {
@@ -30,5 +40,5 @@ Object.entries(components).forEach(([path, importFunction]) => {
 });
 
 app.use(store);
-
+app.use(vuetify);
 app.mount('#app');
