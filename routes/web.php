@@ -220,6 +220,7 @@ Route::prefix('{tenant}')->group(function () {
             Route::get('/list', [PatientController::class, 'list'])->name('tenant.patient.list');
             Route::get('/create', [PatientController::class, 'create'])->name('tenant.patient.create');
             Route::post('/store', [PatientController::class, 'store'])->name('tenant.patient.store');
+            Route::delete('/delete', [PatientController::class, 'delete'])->name('tenant.patient.delete');
         });
 
         Route::get('/reports', [TenantController::class, 'reports'])->name('tenant.reports');

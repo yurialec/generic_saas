@@ -3,35 +3,22 @@
         <div class="card-header">
             <h4>Cadastrar novo paciente</h4>
         </div>
-
-        <div class="container mt-3" style="width: 300px;">
-            <v-alert
-                v-model="alert"
-                border="start"
-                color="success"
-                title="Atenção"
-                variant="tonal"
-                close-label="Fechar Alerta"
-                dismissible>
-                Operação realizada com sucesso!
-            </v-alert>
-        </div>
-
         <div class="card-body">
             <div class="d-flex justify-content-center">
-                <form method="POST" action="" @submit.prevent="save()" class="col-lg-8" autocomplete="off">
+                <form method="POST" action="" @submit.prevent="save()" class="col-lg-8 col-12" autocomplete="off">
+                    <!-- Primeira linha de campos -->
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
+                        <div class="col-md-6 col-12">
+                            <div class="form-group mb-3">
                                 <label>Nome completo</label>
                                 <input type="text" class="form-control" v-model="patient.full_name" required>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label>CPF</label>
                                 <input type="text" class="form-control" v-model="patient.cpf" required
                                     v-mask="'###.###.###-##'">
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label>E-mail</label>
                                 <input type="email" class="form-control" v-model="patient.email" @input="validateEmail"
                                     required>
@@ -40,54 +27,56 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
+                        <div class="col-md-6 col-12">
+                            <div class="form-group mb-3">
                                 <label>Grupo</label>
                                 <select class="form-select form-control" v-model="patient.group" required>
                                     <option v-for="(label, key) in getGroups" :value="key">{{ label }}</option>
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label>Sexo</label>
                                 <select class="form-select form-control" v-model="patient.gender" required>
                                     <option v-for="(label, key) in getGender" :value="key">{{ label }}</option>
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label>Idade</label>
                                 <input type="number" class="form-control" v-model="patient.age" min="0" required>
                             </div>
                         </div>
                     </div>
-                    <div class="row mt-3">
-                        <div class="col-md-6">
-                            <div class="form-group">
+
+                    <!-- Segunda linha de campos -->
+                    <div class="row">
+                        <div class="col-md-6 col-12">
+                            <div class="form-group mb-3">
                                 <label>Telefone</label>
                                 <input type="text" class="form-control" v-model="patient.phone"
                                     v-mask="['(##) ####-####', '(##) #####-####']" required>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label>Responsável (se menor)</label>
                                 <input type="text" class="form-control" :require="patient.age < 18"
                                     v-model="patient.guardian_name">
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label>Telefone do responsável</label>
                                 <input type="text" class="form-control" :require="patient.age < 18"
                                     v-model="patient.guardian_phone" v-mask="['(##) ####-####', '(##) #####-####']">
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
+                        <div class="col-md-6 col-12">
+                            <div class="form-group mb-3">
                                 <label>Contato de emergência</label>
                                 <input type="text" class="form-control" v-model="patient.emergency_contact" required>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label>Telefone de emergência</label>
                                 <input type="text" class="form-control" v-model="patient.emergency_phone"
                                     v-mask="['(##) ####-####', '(##) #####-####']" required>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label>Plano de pagamento</label>
                                 <select class="form-select form-control" v-model="patient.payment_plan" required>
                                     <option v-for="(label, key) in getPayment" :value="key">{{ label }}</option>
@@ -95,20 +84,24 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Textarea para observações -->
                     <div class="row mt-3">
                         <div class="col-12">
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label>Observações</label>
                                 <textarea class="form-control" v-model="patient.notes" rows="3"></textarea>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Botões -->
                     <div class="row mt-4">
-                        <div class="col-sm-6 text-start">
-                            <a :href="urlIndexPatient" class="btn btn-secondary btn-sm">Voltar</a>
+                        <div class="col-sm-6 col-12 text-start mb-2 mb-sm-0">
+                            <a :href="urlIndexPatient" class="btn btn-secondary btn-sm w-100">Voltar</a>
                         </div>
-                        <div class="col-sm-6 text-end">
-                            <button class="btn btn-primary btn-sm" type="submit">Cadastrar</button>
+                        <div class="col-sm-6 col-12 text-end">
+                            <button class="btn btn-primary btn-sm w-100" type="submit">Cadastrar</button>
                         </div>
                     </div>
                 </form>
@@ -178,10 +171,21 @@ export default {
         save() {
             axios.post(this.tenant + '/patients/store', this.patient)
                 .then((response) => {
-                    console.log('cadastrou');
+                    this.$showWidget('Operação realizada com sucesso!', true);
+                    window.scrollTo(0, top);
                 })
                 .catch((errors) => {
-                    console.log('erro ao cadastrar');
+
+                    if (errors.response && errors.response.data.errors) {
+                        const errorMessages = Object.values(errors.response.data.errors).flat();
+                        errorMessages.forEach(message => {
+                            this.$showWidget(message, false);
+                        });
+                    } else {
+                        this.$showWidget('Ocorreu um erro inesperado.', false);
+                    }
+
+                    window.scrollTo(0, top);
                 })
                 .finally(() => {
 

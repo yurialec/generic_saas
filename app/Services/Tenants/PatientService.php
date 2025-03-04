@@ -22,4 +22,9 @@ class PatientService
     {
         return $this->PatientRepository->create($data);
     }
+
+    public function delete($id)
+    {
+        return $this->PatientRepository->delete($id);
+    }
 }

@@ -5,16 +5,7 @@ import store from './store'; // Importa o Vuex store
 import { mask } from 'vue-the-mask';
 import $ from 'jquery';
 import 'admin-lte';
-import { createVuetify } from 'vuetify';
-import { VAlert, VContainer } from 'vuetify/components';
-import 'vuetify/styles';
-
-const vuetify = createVuetify({
-    components: {
-        VAlert,
-        VContainer,
-    },
-});
+import FloatingWidget from './components/FloatingWidget.vue';
 
 let token = document.head.querySelector('meta[name="csrf-token"]');
 if (token) {
@@ -30,8 +21,18 @@ window.axios = axios;
 const tenant = window.tenant || null;
 
 window.$ = window.jQuery = $;
+
 const app = createApp({});
 app.directive('mask', mask);
+
+app.component('FloatingWidget', FloatingWidget);
+
+const floatingWidgetInstance = createApp(FloatingWidget).mount(document.createElement('div'));
+document.body.appendChild(floatingWidgetInstance.$el);
+
+app.config.globalProperties.$showWidget = function (message, isSuccess) {
+    floatingWidgetInstance.show(message, isSuccess);
+};
 
 const components = import.meta.glob('./components/**/*.vue');
 Object.entries(components).forEach(([path, importFunction]) => {
@@ -40,5 +41,4 @@ Object.entries(components).forEach(([path, importFunction]) => {
 });
 
 app.use(store);
-app.use(vuetify);
 app.mount('#app');

@@ -43,7 +43,7 @@ class PatientRepository implements PatientRepositoryInterface
                 return $patient;
             }
             return null;
-            
+
         } catch (Exception $e) {
             Log::error('Erro ao criar paciente', ['error' => $e->getMessage()]);
             return null;
@@ -62,6 +62,13 @@ class PatientRepository implements PatientRepositoryInterface
 
     public function delete($id)
     {
-        return Patient::destroy($id);
+        try {
+            dd($id);
+            $patient = $this->patient->where($id)->first();
+            return $patient->delete();
+        } catch (Exception $e) {
+            Log::error('Erro', ['error' => $e->getMessage()]);
+            return null;
+        }
     }
 }

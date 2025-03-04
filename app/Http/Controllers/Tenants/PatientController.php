@@ -59,4 +59,22 @@ class PatientController extends Controller
             ], 204);
         }
     }
+
+    public function delete(Request $request)
+    {
+        dd($request->all());
+
+        // $client = $this->PatientService->delete($patientToDelete);
+        // if ($client) {
+        //     return response()->json([
+        //         'status' => true,
+        //         'message' => 'Paciente excluio com sucesso',
+        //     ], 200);
+        // } else {
+        //     return response()->json([
+        //         'status' => false,
+        //         'message' => 'Erro ao excluir Paciente'
+        //     ], 204);
+        // }
+    }
 }

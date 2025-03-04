@@ -75,11 +75,11 @@
     </div>
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
+            <div class="modal-content modal-sm">
+                <!-- <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Confirmação de Exclusão</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
+                </div> -->
                 <div class="modal-body">
                     Tem certeza que deseja deletar este registro?
                 </div>
@@ -139,14 +139,14 @@ export default {
                     this.loading = false
                 });
         },
-        confirmarExclusao(userId) {
-            this.patientToDelete = userId;
+        confirmarExclusao(patientId) {
+            this.patientToDelete = patientId;
         },
         excluirRegistro() {
             if (this.patientToDelete !== null) {
-                axios.delete(this.tenant + '/patients/delete/' + this.patientToDelete)
+                axios.delete(this.tenant + '/patients/delete', { patient: this.patientToDelete })
                     .then(response => {
-                        this.getUsers();
+                        this.getPatients();
                         this.patientToDelete = null;
 
                         const modal = Modal.getInstance(document.getElementById('exampleModal'));
@@ -154,12 +154,8 @@ export default {
                             modal.hide();
                         }
 
-                        if (response.data == '') {
-                            this.alertStatus = 'notAllowed';
-                        } else {
-                            this.alertStatus = true;
-                        }
-
+                        this.$showWidget('Operação realizada com sucesso!', true);
+                        window.scrollTo(0, top);
                     })
                     .catch(errors => {
                         const modal = Modal.getInstance(document.getElementById('exampleModal'));
@@ -167,8 +163,13 @@ export default {
                             modal.hide();
                         }
 
-                        if (errors.response.status == 405) {
-                            this.alertStatus = 'notAllowed';
+                        if (errors.response && errors.response.data.errors) {
+                            const errorMessages = Object.values(errors.response.data.errors).flat();
+                            errorMessages.forEach(message => {
+                                this.$showWidget(message, false);
+                            });
+                        } else {
+                            this.$showWidget('Ocorreu um erro inesperado.', false);
                         }
                     });
             }
