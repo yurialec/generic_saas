@@ -144,19 +144,20 @@ export default {
         },
         excluirRegistro() {
             if (this.patientToDelete !== null) {
-                axios.delete(this.tenant + '/patients/delete', { patient: this.patientToDelete })
-                    .then(response => {
-                        this.getPatients();
-                        this.patientToDelete = null;
 
-                        const modal = Modal.getInstance(document.getElementById('exampleModal'));
-                        if (modal) {
-                            modal.hide();
-                        }
+                axios.delete('/' + this.tenant + '/patients/delete', { params: { id: this.patientToDelete }
+                }).then(response => {
+                    this.getPatients();
+                    this.patientToDelete = null;
 
-                        this.$showWidget('Operação realizada com sucesso!', true);
-                        window.scrollTo(0, top);
-                    })
+                    const modal = Modal.getInstance(document.getElementById('exampleModal'));
+                    if (modal) {
+                        modal.hide();
+                    }
+
+                    this.$showWidget('Operação realizada com sucesso!', true);
+                    window.scrollTo(0, top);
+                })
                     .catch(errors => {
                         const modal = Modal.getInstance(document.getElementById('exampleModal'));
                         if (modal) {

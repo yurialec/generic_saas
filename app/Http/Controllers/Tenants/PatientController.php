@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Tenants;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\Patient\StorePatientRequest;
+use App\Models\Tenants\Patient;
 use App\Services\Tenants\PatientService;
 use Illuminate\Http\Request;
 
@@ -62,19 +63,17 @@ class PatientController extends Controller
 
     public function delete(Request $request)
     {
-        dd($request->all());
-
-        // $client = $this->PatientService->delete($patientToDelete);
-        // if ($client) {
-        //     return response()->json([
-        //         'status' => true,
-        //         'message' => 'Paciente excluio com sucesso',
-        //     ], 200);
-        // } else {
-        //     return response()->json([
-        //         'status' => false,
-        //         'message' => 'Erro ao excluir Paciente'
-        //     ], 204);
-        // }
+        $client = $this->PatientService->delete($request->id);
+        if ($client) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Paciente excluio com sucesso',
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Erro ao excluir Paciente'
+            ], 204);
+        }
     }
 }

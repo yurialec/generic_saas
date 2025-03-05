@@ -63,9 +63,7 @@ class PatientRepository implements PatientRepositoryInterface
     public function delete($id)
     {
         try {
-            dd($id);
-            $patient = $this->patient->where($id)->first();
-            return $patient->delete();
+            return $this->patient->find($id)->delete();
         } catch (Exception $e) {
             Log::error('Erro', ['error' => $e->getMessage()]);
             return null;
