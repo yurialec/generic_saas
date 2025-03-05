@@ -1,14 +1,4 @@
 <template>
-
-    <div v-if="this.alertStatus === true" class="alert alert-success alert-dismissible fade show" role="alert">
-        <i class="fa-regular fa-circle-check"></i> Registro exluido com sucesso
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    <div v-if="this.alertStatus == 'notAllowed'" class="alert alert-warning alert-dismissible fade show" role="alert">
-        <i class="fa-solid fa-triangle-exclamation"></i> Você não tem permissão para acessar essa funcionalidade
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-
     <div class="card">
         <div class="card-header">
             <div class="row align-items-center">
@@ -32,6 +22,11 @@
             <h5>Nenhum resultado encontrado</h5>
         </div>
         <div v-else class="card-body">
+            <div v-if="loading" class="d-flex justify-content-center">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden"></span>
+                </div>
+            </div>
             <div class="table-responsive">
                 <table class="table table-sm table-hover">
                     <thead>
@@ -39,6 +34,7 @@
                             <th scope="col">#</th>
                             <th scope="col">Nome</th>
                             <th scope="col">E-mail</th>
+                            <th scope="col">Status</th>
                             <th scope="col">Ações</th>
                         </tr>
                     </thead>
@@ -47,14 +43,17 @@
                             <th scope="row">{{ patient.id }}</th>
                             <td>{{ patient.name }}</td>
                             <td>{{ patient.email }}</td>
+                            <td>{{ patient.deleted_at ? 'Desativado' : 'Ativado' }}</td>
                             <td>
-                                <a :href="tenant + '/patients/edit/' + patient.id">
-                                    <i class="fa-solid fa-pen-to-square"></i>
+                                <a :href="'/' + tenant + '/patients/edit/' + patient.id">
+                                    <i class="fa-solid fa-pen-to-square text-warning"></i>
                                 </a>
                                 &nbsp;&nbsp;&nbsp;
-                                <button type="button" class="btn text-danger p-0" @click="confirmarExclusao(patient.id)"
+                                <button type="button" class="btn p-0" @click="disablePatient(patient)"
                                     data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                    <i class="fa-solid fa-trash-can"></i>
+                                    <i v-if="patient.deleted_at"
+                                        class="fa-solid fa-circle-check text-success"></i>&nbsp;
+                                    <i v-else class="fa-solid fa-circle-xmark text-danger"></i>
                                 </button>
                             </td>
                         </tr>
@@ -81,11 +80,11 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div> -->
                 <div class="modal-body">
-                    Tem certeza que deseja deletar este registro?
+                    Tem certeza que deseja ?
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-danger" @click="excluirRegistro">Excluir</button>
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary btn-sm" @click="disable">Confirmar</button>
                 </div>
             </div>
         </div>
@@ -107,7 +106,7 @@ export default {
                 links: []
             },
             searchFilter: '',
-            patientToDelete: null,
+            patientToDisable: null,
             alertStatus: null,
             msg: [],
             loading: null,
@@ -139,25 +138,25 @@ export default {
                     this.loading = false
                 });
         },
-        confirmarExclusao(patientId) {
-            this.patientToDelete = patientId;
+        disablePatient(patient) {
+            this.patientToDisable = patient;
         },
-        excluirRegistro() {
-            if (this.patientToDelete !== null) {
+        disable() {
+            if (this.patientToDisable !== null) {
+                this.loading = true;
+                axios.post('/' + this.tenant + '/patients/disable', { patient: this.patientToDisable })
+                    .then(response => {
+                        this.getPatients();
+                        this.patientToDisable = null;
 
-                axios.delete('/' + this.tenant + '/patients/delete', { params: { id: this.patientToDelete }
-                }).then(response => {
-                    this.getPatients();
-                    this.patientToDelete = null;
+                        const modal = Modal.getInstance(document.getElementById('exampleModal'));
+                        if (modal) {
+                            modal.hide();
+                        }
 
-                    const modal = Modal.getInstance(document.getElementById('exampleModal'));
-                    if (modal) {
-                        modal.hide();
-                    }
-
-                    this.$showWidget('Operação realizada com sucesso!', true);
-                    window.scrollTo(0, top);
-                })
+                        this.$showWidget('Operação realizada com sucesso!', true);
+                        window.scrollTo(0, top);
+                    })
                     .catch(errors => {
                         const modal = Modal.getInstance(document.getElementById('exampleModal'));
                         if (modal) {
@@ -172,6 +171,8 @@ export default {
                         } else {
                             this.$showWidget('Ocorreu um erro inesperado.', false);
                         }
+                    }).finally(() => {
+                        this.loading = false
                     });
             }
         },

@@ -4,6 +4,7 @@ namespace App\Repositories\Tenants;
 
 use App\Interfaces\Tenants\PatientRepositoryInterface;
 use App\Models\Tenants\Patient;
+use Carbon\Carbon;
 use Exception;
 use Log;
 
@@ -52,18 +53,32 @@ class PatientRepository implements PatientRepositoryInterface
 
     public function update($id, array $data)
     {
-        $model = Patient::find($id);
-        if ($model) {
-            $model->update($data);
-            return $model;
+        try {
+            $patient = $this->patient->find($id);
+            $patient->fill($data);
+            return $patient->save();
+        } catch (Exception $e) {
+            Log::error('Erro', ['error' => $e->getMessage()]);
+            return null;
         }
-        return null;
     }
 
-    public function delete($id)
+    public function disable($id)
     {
         try {
-            return $this->patient->find($id)->delete();
+            $patient = $this->patient->find($id);
+            $patient->deleted_at ? $patient->deleted_at = null : $patient->deleted_at = Carbon::now();
+            return $patient->save();
+        } catch (Exception $e) {
+            Log::error('Erro', ['error' => $e->getMessage()]);
+            return null;
+        }
+    }
+
+    public function getPatientById($id)
+    {
+        try {
+            return $this->patient->find($id);
         } catch (Exception $e) {
             Log::error('Erro', ['error' => $e->getMessage()]);
             return null;

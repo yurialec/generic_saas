@@ -220,7 +220,10 @@ Route::prefix('{tenant}')->group(function () {
             Route::get('/list', [PatientController::class, 'list'])->name('tenant.patient.list');
             Route::get('/create', [PatientController::class, 'create'])->name('tenant.patient.create');
             Route::post('/store', [PatientController::class, 'store'])->name('tenant.patient.store');
-            Route::delete('/delete', [PatientController::class, 'delete'])->name('tenant.patient.delete');
+            Route::post('/disable', [PatientController::class, 'disable'])->name('tenant.patient.disable');
+            Route::get('/edit/{id}', [PatientController::class, 'edit'])->name('tenant.patient.edit');
+            Route::get('/get-patient-by-id/{id}', [PatientController::class, 'getPatientById'])->name('tenant.patient.getPatientById');
+            Route::put('/update/{id}', [PatientController::class, 'update'])->name('tenant.patient.update');
         });
 
         Route::get('/reports', [TenantController::class, 'reports'])->name('tenant.reports');

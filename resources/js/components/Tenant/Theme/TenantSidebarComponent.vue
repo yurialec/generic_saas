@@ -3,7 +3,7 @@
         <a :href="urlDashboard" class="brand-link">
             <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/Logo.min.svg" alt="AdminLTE Logo"
                 class="brand-image" style="opacity: .8">
-            <span class="brand-text font-weight-light">NOME_SISTEMA</span>
+            <span class="brand-text font-weight-light">NO</span>
         </a>
         <div class="sidebar">
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Tenants;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\Patient\StorePatientRequest;
-use App\Models\Tenants\Patient;
+use App\Http\Requests\Tenant\Patient\UpdatePatientRequest;
 use App\Services\Tenants\PatientService;
 use Illuminate\Http\Request;
 
@@ -61,9 +61,9 @@ class PatientController extends Controller
         }
     }
 
-    public function delete(Request $request)
+    public function disable(Request $request)
     {
-        $client = $this->PatientService->delete($request->id);
+        $client = $this->PatientService->disable($request->patient['id']);
         if ($client) {
             return response()->json([
                 'status' => true,
@@ -73,6 +73,44 @@ class PatientController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'Erro ao excluir Paciente'
+            ], 204);
+        }
+    }
+
+    public function edit($tenant, $id)
+    {
+        return view('tenant.patient.edit', compact('id'));
+    }
+
+    public function getPatientById($tenant, $id)
+    {
+        $patientById = $this->PatientService->getPatientById($id);
+        if ($patientById) {
+            return response()->json([
+                'status' => true,
+                'patientById' => $patientById,
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Erro ao excluir Paciente'
+            ], 204);
+        }
+    }
+
+    public function update($tenant, $id, Request $request)
+    {
+        $patient = $this->PatientService->update($id, $request->patient);
+
+        if ($patient) {
+            return response()->json([
+                'status' => true,
+                'patient' => $patient,
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Erro ao atualizar paciente'
             ], 204);
         }
     }

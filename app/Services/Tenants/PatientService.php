@@ -23,8 +23,18 @@ class PatientService
         return $this->PatientRepository->create($data);
     }
 
-    public function delete($id)
+    public function disable($id)
     {
-        return $this->PatientRepository->delete($id);
+        return $this->PatientRepository->disable($id);
+    }
+
+    public function getPatientById($id)
+    {
+        return $this->PatientRepository->getPatientById($id);
+    }
+
+    public function update($id, $patient)
+    {
+        return $this->PatientRepository->update($id, $patient);
     }
 }
