@@ -1,147 +1,56 @@
 <template>
     <div class="card">
         <div class="card-header">
-            <h4>Editar Usuário</h4>
+            <h4>Editar Cliente</h4>
         </div>
         <div class="card-body">
-            <div class="row justify-content-center">
-                <div class="col-sm-6">
-
-                    <div v-if="loading" class="d-flex justify-content-center">
-                        <div class="spinner-border" role="status">
-                            <span class="visually-hidden">Loading...</span>
+            <div class="d-flex justify-content-center">
+                <form method="POST" action="" @submit.prevent="save()" class="col-lg-8" autocomplete="off">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Nome</label>
+                                <input type="text" class="form-control" v-model="client.name" required>
+                            </div>
+                            <div class="form-group">
+                                <label>CPF</label>
+                                <input type="text" class="form-control" v-model="client.cpf" required
+                                    v-mask="'###.###.###-##'">
+                            </div>
+                            <div class="form-group">
+                                <label>E-mail</label>
+                                <input type="text" class="form-control" v-model="client.email" @input="validateEmail"
+                                    autocomplete="off" required>
+                                <div v-if="validEmail === false" class="alert alert-danger mt-3" role="alert">E-mail
+                                    inválido.</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Telefone</label>
+                                <input type="text" class="form-control" v-model="client.phone"
+                                    v-mask="['(##) ####-####', '(##) #####-####']" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Cargo/Função</label>
+                                <input type="text" class="form-control" v-model="client.function" required>
+                            </div>
+                            <div class="form-group">
+                                <label>CRP</label>
+                                <input type="text" class="form-control" v-model="client.tenant.domain"
+                                    v-mask="'01/#####'" required>
+                            </div>
                         </div>
                     </div>
-
-                    <form v-else method="POST" action="" @submit.prevent="save()" class="col-lg-8" autocomplete="off">
-                        <div v-if="alertStatus === true" class="alert alert-success alert-dismissible fade show"
-                            role="alert">
-                            <i class="bi bi-check2-circle"></i> Registro atualizado com sucesso
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <div class="row mt-4">
+                        <div class="col-sm-6 text-start">
+                            <a :href="urlIndexClient" class="btn btn-secondary btn-sm">Voltar</a>
                         </div>
-
-                        <div v-if="alertStatus === false" class="alert alert-danger alert-dismissible fade show"
-                            role="alert">
-                            <i class="bi bi-exclamation-circle"></i> Erro ao atualizar registro
-                            <hr>
-                            <ul v-for="msg in messages.data.errors">
-                                <li>{{ msg[0] }}</li>
-                            </ul>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <div class="col-sm-6 text-end">
+                            <button class="btn btn-primary btn-sm" type="submit">Cadastrar</button>
                         </div>
-
-                        <div class="form-group">
-                            <label>Nome</label>
-                            <input type="text" class="form-control" v-model="user.user.name">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Perfil</label>
-                            <select class="form-control" v-model="user.user.role_id">
-                                <option v-for="role in this.roles" :value="role.id">{{ role.name }}</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>E-mail</label>
-                            <input type="text" class="form-control" v-model="user.user.email" @input="validateEmail"
-                                autocomplete="off">
-
-                            <div style="margin-top: 10px;" v-if="validEmail === false" class="alert alert-danger"
-                                role="alert">
-                                E-mail inválido.
-                            </div>
-                        </div>
-
-
-                        <div class="form-group" v-show="changePassword">
-                            <hr>
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-sm">
-                                        <label>Senha</label>
-                                        <input :type="inputPass ? 'text' : 'password'" class="form-control"
-                                            v-model="user.password" @input="passwordCheck" autocomplete="new-password">
-                                    </div>
-                                    <div class="col-sm">
-                                        <label>Confirmar senha</label>
-                                        <div class="input-group">
-                                            <input :type="inputPass ? 'text' : 'password'" class="form-control"
-                                                v-model="confirmPassword" autocomplete="new-password">
-                                            <div class="input-group-prepend">
-                                                <div class="input-group-text">
-                                                    <button class="btn btn-outline-secondary btn-sm" type="button"
-                                                        @click="showPassword()" id="button-addon2">
-                                                        <i class="bi bi-eye"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-sm" style="margin-top: 5px;">
-                                <div>
-                                    <h6>Requisitos mínimos para a senha:</h6>
-                                </div>
-                                <div>
-                                    <small style="color: red; margin-bottom: 1px;" v-if="!has_six_chars">No mínimo 6
-                                        caracteres.</small>
-                                    <small style="color: green; margin-bottom: 1px;" v-else>No mínimo 6
-                                        caracteres.</small>
-                                    <br>
-                                    <small style="color: red; margin-bottom: 1px;" v-if="!has_lowercase">Conter pelo
-                                        menos uma
-                                        letra.</small>
-                                    <small style="color: green; margin-bottom: 1px;" v-else>Conter pelo menos uma
-                                        letra.</small>
-                                    <br>
-                                    <small style="color: red; margin-bottom: 1px;" v-if="!has_number">Conter pelo menos
-                                        um
-                                        número.</small>
-                                    <small style="color: green; margin-bottom: 1px;" v-else>Conter pelo menos um
-                                        número.</small>
-                                    <br>
-                                    <small style="color: red; margin-bottom: 1px;" v-if="!has_special">Conter pelo menos
-                                        um
-                                        caractere especial.</small>
-                                    <small style="color: green; margin-bottom: 1px;" v-else>Conter pelo menos um
-                                        caractere
-                                        especial.</small>
-                                    <br>
-                                    <small style="color: red; margin-bottom: 1px;"
-                                        v-if="user.password !== confirmPassword">A confirmação de senha precisa
-                                        ser igual
-                                        a senha.</small>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="container" style="margin-top: 10px;">
-                            <div class="row">
-                                <div class="col text-end">
-                                    <button class="btn btn-primary btn-sm" @click.prevent="changePass()">
-                                        Alterar senha
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row mt-5">
-                            <div class="col-sm-6">
-                                <div class="text-start">
-                                    <a :href="urlIndexUser" class="btn btn-secondary btn-sm">Voltar</a>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="col text-end">
-                                    <button class="btn btn-primary btn-sm" type="submit">Atualizar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -149,97 +58,76 @@
 
 <script>
 import axios from 'axios';
-import { computed } from 'vue';
-import { useStore } from 'vuex';
 
 export default {
     props: {
-        userById: {
-            type: String,
-            required: true
-        },
-        urlIndexUser: String,
-    },
-    setup() {
-        const store = useStore();
-        const loggedUser = computed(() => store.getters.getUser);
-
-        return {
-            loggedUser
-        };
+        id: Number,
+        urlIndexClient: String,
     },
     data() {
         return {
-            roles: [],
-            user: {
-                user: JSON.parse(this.userById),
-                password: '',
+            client: {
+                cpf: '',
+                created_at: '',
+                email: '',
+                function: '',
+                name: '',
+                phone: '',
+                role: {
+                    id: '',
+                    name: '',
+                    permissions: '',
+                },
+                tenant: {
+                    domain: '',
+                }
             },
-            confirmPassword: '',
-            inputPass: false,
-            has_number: '',
-            has_lowercase: '',
-            has_special: '',
-            has_six_chars: '',
-            alertStatus: null,
-            messages: [],
-            changePassword: false,
             validEmail: null,
             loading: null,
         };
     },
     mounted() {
-        this.getRoles();
+        this.getClientById();
     },
     methods: {
         validateEmail() {
             const emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-            this.validEmail = emailPattern.test(this.user.user.email);
+            this.validEmail = emailPattern.test(this.client.email);
         },
-        getRoles() {
+        getClientById() {
             this.loading = true;
-            axios.get('/admin/roles/list')
+            axios.get('/admin/clients/get-client-by-id/' + this.id)
                 .then(response => {
-                    this.roles = response.data.roles.data;
+                    this.client = response.data.client;
                 })
                 .catch(errors => {
-
+                    this.$showWidget('Erro!', false);
                 }).finally(() => {
-                    this.loading = false
+                    this.loading = false;
                 });
         },
         save() {
-            const payload = {
-                name: this.user.user.name,
-                email: this.user.user.email,
-                role_id: this.user.user.role_id,
-            };
-            if (this.user.password) {
-                payload.password = this.user.password;
-            }
-            axios.post('/admin/users/update/' + this.user.user.id, payload)
+            axios.put('/admin/clients/update/' + this.id, this.client)
                 .then(response => {
-                    this.alertStatus = true;
-                    this.messages = response.data;
+                    this.$showWidget('Cliente alterado com sucessoce!', true);
                 })
                 .catch(errors => {
-                    this.alertStatus = false;
-                    this.messages = errors.response;
+                    this.$showWidget('Erro ao editar cliente!', false);
                 });
         },
         changePass() {
             this.changePassword = !this.changePassword;
             if (!this.changePassword) {
-                this.user.password = '';
+                this.client.password = '';
                 this.confirmPassword = '';
             }
         },
         passwordCheck() {
-            if (this.user.password) {
-                this.has_number = /\d/.test(this.user.password);
-                this.has_lowercase = /[a-zA-Z]/.test(this.user.password);
-                this.has_special = /[!@#\$%\^\&*\)\(+=._-]/.test(this.user.password);
-                this.has_six_chars = this.user.password.length >= 6;
+            if (this.client.password) {
+                this.has_number = /\d/.test(this.client.password);
+                this.has_lowercase = /[a-zA-Z]/.test(this.client.password);
+                this.has_special = /[!@#\$%\^\&*\)\(+=._-]/.test(this.client.password);
+                this.has_six_chars = this.client.password.length >= 6;
             }
         },
         showPassword() {

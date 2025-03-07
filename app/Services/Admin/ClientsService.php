@@ -2,6 +2,7 @@
 
 namespace App\Services\Admin;
 
+use App\Helpers\Utils;
 use App\Repositories\Admin\ClientsRepository;
 
 class ClientsService
@@ -35,5 +36,29 @@ class ClientsService
         ];
 
         return $this->ClientsRepository->create($userData, $tenantData);
+    }
+
+    public function getClientById($id)
+    {
+        return $this->ClientsRepository->getClientById($id);
+    }
+
+    public function update($id, $data)
+    {
+        $clientData = [
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'cpf' => Utils::sanitizeInteger($data['cpf']),
+            'function' => $data['function'],
+            'phone' => Utils::sanitizeInteger($data['phone']),
+        ];
+
+        $tenantData = [
+            'id' => $data['tenant']['id'],
+            'name' => $data['name'],
+            'domain' => Utils::sanitizeInteger($data['tenant']['domain']),
+        ];
+
+        return $this->ClientsRepository->update($id, $clientData, $tenantData);
     }
 }

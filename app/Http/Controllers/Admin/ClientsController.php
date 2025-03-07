@@ -59,4 +59,42 @@ class ClientsController extends Controller
             ], 204);
         }
     }
+
+    public function edit($id)
+    {
+        return view('admin.clients.edit', compact('id'));
+    }
+
+    public function getClientById($id)
+    {
+        $client = $this->ClientsService->getClientById($id);
+        if ($client) {
+            return response()->json([
+                'status' => true,
+                'client' => $client,
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Erro ao localizar cliente'
+            ], 204);
+        }
+    }
+
+    public function update($id, Request $request)
+    {
+        $client = $this->ClientsService->update($id, $request->all());
+
+        if ($client) {
+            return response()->json([
+                'status' => true,
+                'client' => $client,
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Erro ao atualizar cliente'
+            ], 204);
+        }
+    }
 }

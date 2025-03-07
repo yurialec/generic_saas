@@ -5,10 +5,6 @@
         </div>
         <div class="card-body">
             <div class="d-flex justify-content-center">
-                <div v-if="this.alertStatus" class="alert alert-success alert-dismissible fade show" role="alert">
-                    Cliente cadastrado com sucesso
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
                 <form method="POST" action="" @submit.prevent="save()" class="col-lg-8" autocomplete="off">
                     <div v-if="equalPasswords === false" class="alert alert-danger alert-dismissible fade show"
                         role="alert">

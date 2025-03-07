@@ -53,7 +53,7 @@
                                 <td>{{ client.email }}</td>
                                 <td>{{ client.tenant.domain }}</td>
                                 <td>
-                                    <a :href="'clients/edit/' + client.id">
+                                    <a :href="'/admin/clients/edit/' + client.id">
                                         <i class="bi bi-pencil-square"></i>
                                     </a>
                                     &nbsp;&nbsp;&nbsp;
@@ -115,25 +115,25 @@ export default {
                 links: []
             },
             searchFilter: '',
-            userToDelete: null,
+            clientToDelete: null,
             alertStatus: null,
             msg: [],
             loading: null,
         };
     },
     mounted() {
-        this.getUsers();
+        this.getClients();
     },
     methods: {
         pesquisar() {
-            this.getUsers('admin/clients/list', this.searchFilter);
+            this.getClients('admin/clients/list', this.searchFilter);
         },
         pagination(url) {
             if (url) {
-                this.getUsers(url);
+                this.getClients(url);
             }
         },
-        getUsers(url = 'admin/clients/list') {
+        getClients(url = 'admin/clients/list') {
             this.loading = true;
             axios.get(url)
                 .then(response => {
@@ -145,36 +145,25 @@ export default {
                     this.loading = false
                 });
         },
-        confirmarExclusao(userId) {
-            this.userToDelete = userId;
+        confirmarExclusao(clientId) {
+            this.clientToDelete = clientId;
         },
         excluirRegistro() {
-            if (this.userToDelete !== null) {
-                axios.delete('/admin/users/delete/' + this.userToDelete)
+            if (this.clientToDelete !== null) {
+                axios.delete('/admin/clients/delete/' + this.clientToDelete)
                     .then(response => {
                         this.getUsers();
-                        this.userToDelete = null;
+                        this.clientToDelete = null;
 
                         const modal = Modal.getInstance(document.getElementById('exampleModal'));
                         if (modal) {
                             modal.hide();
                         }
-
-                        if (response.data == '') {
-                            this.alertStatus = 'notAllowed';
-                        } else {
-                            this.alertStatus = true;
-                        }
-
                     })
                     .catch(errors => {
                         const modal = Modal.getInstance(document.getElementById('exampleModal'));
                         if (modal) {
                             modal.hide();
-                        }
-
-                        if (errors.response.status == 405) {
-                            this.alertStatus = 'notAllowed';
                         }
                     });
             }

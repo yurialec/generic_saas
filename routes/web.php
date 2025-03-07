@@ -178,7 +178,8 @@ Route::middleware(['auth'])->group(function () {
                 Route::get('/create', [ClientsController::class, 'create'])->name('clients.create');
                 Route::post('/store', [ClientsController::class, 'store'])->name('clients.store');
                 Route::get('/edit/{id}', [ClientsController::class, 'edit'])->name('clients.edit');
-                Route::post('/update/{id}', [ClientsController::class, 'update'])->name('clients.update');
+                Route::get('/get-client-by-id/{id}', [ClientsController::class, 'getClientById'])->name('clients.getclientbyid');
+                Route::put('/update/{id}', [ClientsController::class, 'update'])->name('clients.update');
                 Route::delete('/delete/{id}', [ClientsController::class, 'delete'])->name('clients.delete');
 
                 Route::prefix('payment-plans')->group(function () {

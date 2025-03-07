@@ -64,14 +64,18 @@ class ClientsRepository implements ClientsRepositoryInterface
         }
     }
 
-    public function update($id, array $data)
+    public function update($id, array $clientData, array $tenantData)
     {
         try {
-            $client = $this->client->find($id);
-            if ($client) {
-                $client->update($data);
-                return $client;
-            }
+            $client = $this->client->findOrFail($id);
+            $tenant = $this->tenant->where('id', $tenantData['id'])->firstOrFail();
+
+            $tenant->fill($tenantData)->save();
+            $client->fill($clientData)->save();
+
+            return [
+                'success' => true,
+            ];
         } catch (Exception $err) {
             Log::error('ERRO', ['erro' => $err->getMessage()]);
             return $err->getMessage();
@@ -82,6 +86,16 @@ class ClientsRepository implements ClientsRepositoryInterface
     {
         try {
             return $this->client->destroy($id);
+        } catch (Exception $err) {
+            Log::error('ERRO', ['erro' => $err->getMessage()]);
+            return $err->getMessage();
+        }
+    }
+
+    public function getClientById($id)
+    {
+        try {
+            return $this->client->with('tenant')->find($id);
         } catch (Exception $err) {
             Log::error('ERRO', ['erro' => $err->getMessage()]);
             return $err->getMessage();
