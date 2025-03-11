@@ -25,8 +25,6 @@ window.$ = window.jQuery = $;
 const app = createApp({});
 app.directive('mask', mask);
 
-app.component('FloatingWidget', FloatingWidget);
-
 const floatingWidgetInstance = createApp(FloatingWidget).mount(document.createElement('div'));
 document.body.appendChild(floatingWidgetInstance.$el);
 
