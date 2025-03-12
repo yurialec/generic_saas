@@ -46,6 +46,14 @@
                                     required>
                             </div>
                         </div>
+                        <div class="col-md-12">
+                            <div clas="form-group">
+                                <label>Planos</label>
+                                <select class="form-control" v-model="client.plan_id">
+                                    <option v-for="plan in this.plans" :value="plan.id">{{ plan.name }}</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-sm">
@@ -116,6 +124,7 @@ export default {
                 domain: '',
                 function: '',
                 phone: '',
+                plan_id: '',
             },
             validEmail: null,
             confirmPassword: '',
@@ -127,9 +136,11 @@ export default {
             alertStatus: null,
             equalPasswords: null,
             messages: [],
+            plans: [],
         };
     },
     mounted() {
+        this.getPlans();
     },
     methods: {
         sanitizeInput(value) {
@@ -139,12 +150,25 @@ export default {
             const emailPattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
             this.validEmail = emailPattern.test(this.client.email);
         },
+        getPlans() {
+            this.loading = true;
+            let url = '/admin/financial/plan/list';
+            axios.get(url)
+                .then(response => {
+                    this.plans = response.data.plans.data;
+                })
+                .catch(errors => {
+                    this.$showWidget('Ocorreu um erro inesperado.', false);
+                }).finally(() => {
+                    this.loading = false
+                });
+        },
         save() {
 
             this.client.password == this.confirmPassword ? this.equalPasswords = true : this.equalPasswords = false;
 
             if (this.equalPasswords === false) {
-                alert("Senhas não conferem");
+                this.$showWidget('Senhas não conferem.', false);
                 return;
             }
 
@@ -160,23 +184,25 @@ export default {
                 phone: this.client.phone,
                 domain: this.client.domain,
                 password: this.client.password,
+                plan_id: this.client.plan_id,
             };
 
             axios.post('/admin/clients/store', data)
                 .then(response => {
-                    this.alertStatus = true;
+                    this.$showWidget('Operação realizada com sucesso!', true);
+                    this.clearForm();
                     window.scrollTo(0, 0);
-
-                    this.client.name = '';
-                    this.client.cpf = '';
-                    this.client.email = '';
-                    this.client.domain = '';
-                    this.client.function = '';
-                    this.client.phone = '';
-                    this.client.password = '';
                 })
                 .catch(errors => {
-                    this.alertStatus = false;
+                    if (errors.response && errors.response.data.errors) {
+                        const errorMessages = Object.values(errors.response.data.errors).flat();
+                        errorMessages.forEach((message) => {
+                            this.$showWidget(message, false);
+                        });
+                    } else {
+                        this.$showWidget('Ocorreu um erro inesperado.', false);
+                    }
+                    window.scrollTo(0, 0);
                 });
         },
         passwordCheck() {
@@ -189,6 +215,16 @@ export default {
         },
         showPassword() {
             this.inputPass = !this.inputPass;
+        },
+        clearForm() {
+            this.client.name = '';
+            this.client.cpf = '';
+            this.client.email = '';
+            this.client.domain = '';
+            this.client.function = '';
+            this.client.phone = '';
+            this.client.password = '';
+            this.client.plan_id = '';
         },
     }
 }

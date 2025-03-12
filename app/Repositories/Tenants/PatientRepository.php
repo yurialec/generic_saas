@@ -6,6 +6,7 @@ use App\Interfaces\Tenants\PatientRepositoryInterface;
 use App\Models\Tenants\Patient;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Log;
 
 class PatientRepository implements PatientRepositoryInterface
@@ -20,7 +21,7 @@ class PatientRepository implements PatientRepositoryInterface
     public function all()
     {
         try {
-            return $this->patient->paginate(10);
+            return $this->patient->where('tenant_id', session('tenant'))->paginate(10);
         } catch (Exception $err) {
             Log::error('ERRO', ['erro' => $err->getMessage()]);
             return $err->getMessage();

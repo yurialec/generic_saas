@@ -1,6 +1,4 @@
 <?php
-
-use App\Http\Controllers\Admin\ClientPaymentPlanController;
 use App\Http\Controllers\Admin\ClientsController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\PaymentsController;
@@ -22,7 +20,6 @@ use App\Http\Controllers\Tenants\AuthTenantController;
 use App\Http\Controllers\Tenants\FinanceController;
 use App\Http\Controllers\Tenants\PatientController;
 use App\Http\Controllers\Tenants\TenantController;
-use App\Models\Tenants\Tenant;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;

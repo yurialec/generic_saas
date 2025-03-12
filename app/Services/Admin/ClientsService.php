@@ -33,6 +33,7 @@ class ClientsService
         $tenantData = [
             'name' => $data['name'],
             'domain' => $data['domain'],
+            'plan_id' => $data['plan_id'],
         ];
 
         return $this->ClientsRepository->create($userData, $tenantData);
