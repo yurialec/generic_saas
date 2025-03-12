@@ -33,6 +33,8 @@
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">Nome</th>
+                            <th scope="col">Preço</th>
+                            <th scope="col">Duração</th>
                             <th scope="col">Ações</th>
                         </tr>
                     </thead>
@@ -40,8 +42,10 @@
                         <tr v-for="plan in plans.data" :key="plan.id">
                             <th scope="row">{{ plan.id }}</th>
                             <td>{{ plan.name }}</td>
+                            <td>{{ plan.price }}</td>
+                            <td>{{ plan.duration }} {{ formatedDuration(plan.dutarion_type) }}</td>
                             <td>
-                                <a href="#">
+                                <a :href="'/admin/financial/plan/edit/' + plan.id">
                                     <i class="bi bi-pencil-square text-warning"></i>
                                 </a>
                                 &nbsp;&nbsp;&nbsp;
@@ -74,7 +78,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div> -->
                 <div class="modal-body">
-                    Tem certeza que deseja ?
+                    Tem certeza que deseja excluir?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
@@ -131,13 +135,33 @@ export default {
                     this.loading = false
                 });
         },
+        formatedDuration(dutarion_type) {
+
+            let word = '';
+            switch (dutarion_type) {
+                case 'D':
+                    word = 'Dias'
+                    break;
+                case 'M':
+                    word = 'Meses'
+                    break;
+                case 'S':
+                    word = 'Semetre'
+                    break;
+                case 'Y':
+                    word = 'Anos'
+                    break;
+            }
+
+            return word;
+        },
         deletePlan(plan) {
-            this.planToDelete = plan;
+            this.planToDelete = plan.id;
         },
         disable() {
             if (this.planToDelete !== null) {
                 this.loading = true;
-                axios.post('/plans/disable', { plan: this.planToDelete })
+                axios.delete('/admin/financial/plan/delete/' + this.planToDelete)
                     .then(response => {
                         this.getPlans();
                         this.planToDelete = null;

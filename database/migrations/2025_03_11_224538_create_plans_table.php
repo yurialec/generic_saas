@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->decimal('price', 8, 2);
             $table->text('description');
             $table->string('duration');
-            $table->json('features');
+            $table->enum('dutarion_type', ['D', 'M', 'S', 'Y']);
             $table->timestamps();
         });
     }

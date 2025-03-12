@@ -59,4 +59,59 @@ class PlanController extends Controller
             ], 204);
         }
     }
+
+    public function delete($id)
+    {
+        $plan = $this->PlanService->delete($id);
+
+        if ($plan) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Paciente excluio com sucesso',
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Erro ao excluir Paciente'
+            ], 204);
+        }
+    }
+
+    public function edit($id)
+    {
+        return view('admin.financial.plan.edit', compact('id'));
+    }
+
+    public function getPlanById($id)
+    {
+        $plan = $this->PlanService->getPlanById($id);
+        if ($plan) {
+            return response()->json([
+                'status' => true,
+                'plan' => $plan,
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Erro ao localizar cliente'
+            ], 204);
+        }
+    }
+
+    public function update($id, Request $request)
+    {
+        $plan = $this->PlanService->update($id, $request->all());
+
+        if ($plan) {
+            return response()->json([
+                'status' => true,
+                'plan' => $plan,
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => false,
+                'message' => 'Erro ao atualizar plano'
+            ], 204);
+        }
+    }
 }

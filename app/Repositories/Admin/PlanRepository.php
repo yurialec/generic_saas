@@ -28,7 +28,12 @@ class PlanRepository implements PlanRepositoryInterface
 
     public function find($id)
     {
-        return $this->plan->find($id);
+        try {
+            return $this->plan->find($id);
+        } catch (Exception $err) {
+            Log::error('Erro', ['erro' => $err->getMessage()]);
+            return null;
+        }
     }
 
     public function create(array $data)
@@ -44,11 +49,9 @@ class PlanRepository implements PlanRepositoryInterface
     public function update($id, array $data)
     {
         try {
-            $model = $this->plan->find($id);
-            if ($model) {
-                $model->update($data);
-                return $model;
-            }
+            $plan = $this->plan->find($id);
+            $plan->fill($data);
+            return $plan->save();
         } catch (Exception $err) {
             Log::error('Erro', ['erro' => $err->getMessage()]);
             return null;

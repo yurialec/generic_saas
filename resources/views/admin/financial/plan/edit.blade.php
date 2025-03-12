@@ -1,7 +1,7 @@
 @extends('layouts.app_admin')
 @section('content')
-    <tenant-patient-edit-component
+    <financial-plans-edit-component
         :id={{$id}}
-        url-index-patient="{{ route('tenant.patient.index', ['tenant' => session('tenant')]) }}">
-    </tenant-patient-edit-component>
+        url-index-plans="{{ route('plan.index') }}">
+    </financial-plans-edit-component>
 @endsection

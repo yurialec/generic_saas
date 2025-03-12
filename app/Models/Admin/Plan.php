@@ -11,6 +11,6 @@ class Plan extends Model
         'price',
         'description',
         'duration',
-        'features',
+        'dutarion_type',
     ];
 }

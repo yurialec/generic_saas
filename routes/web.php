@@ -195,7 +195,8 @@ Route::middleware(['auth'])->group(function () {
                     Route::get('/create', [PlanController::class, 'create'])->name('plan.create');
                     Route::post('/store', [PlanController::class, 'store'])->name('plan.store');
                     Route::get('/edit/{id}', [PlanController::class, 'edit'])->name('plan.edit');
-                    Route::post('/update/{id}', [PlanController::class, 'update'])->name('plan.update');
+                    Route::get('/get-plan-by-id/{id}', [PlanController::class, 'getPlanById'])->name('clients.getplanbyid');
+                    Route::put('/update/{id}', [PlanController::class, 'update'])->name('plan.update');
                     Route::delete('/delete/{id}', [PlanController::class, 'delete'])->name('plan.delete');
                 });
             });

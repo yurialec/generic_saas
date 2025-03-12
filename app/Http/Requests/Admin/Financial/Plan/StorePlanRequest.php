@@ -26,8 +26,6 @@ class StorePlanRequest extends FormRequest
             'price' => 'required|numeric|min:0',
             'description' => 'required|string|max:1000',
             'duration' => 'required|string|max:50',
-            'features' => 'required|array',
-            'features.*' => 'string|max:255',
         ];
     }
 
@@ -46,8 +44,6 @@ class StorePlanRequest extends FormRequest
             'price.min' => 'O preço não pode ser negativo.',
             'description.required' => 'O campo descrição é obrigatório.',
             'duration.required' => 'O campo duração é obrigatório.',
-            'features.required' => 'O campo características é obrigatório.',
-            'features.array' => 'O campo características deve ser um array.',
         ];
     }
 }
