@@ -202,25 +202,25 @@ Route::middleware(['auth'])->group(function () {
 
             Route::middleware(['acl:manter-inscricoes'])->group(callback: function () {
                 Route::prefix('subscriptions')->group(function () {
-                    Route::get('/', [SubscriptionsController::class, 'index'])->name('plan.index');
-                    Route::get('/list', [SubscriptionsController::class, 'list'])->name('plan.list');
-                    Route::get('/create', [SubscriptionsController::class, 'create'])->name('plan.create');
-                    Route::post('/store', [SubscriptionsController::class, 'store'])->name('plan.store');
-                    Route::get('/edit/{id}', [SubscriptionsController::class, 'edit'])->name('plan.edit');
-                    Route::post('/update/{id}', [SubscriptionsController::class, 'update'])->name('plan.update');
-                    Route::delete('/delete/{id}', [SubscriptionsController::class, 'delete'])->name('plan.delete');
+                    Route::get('/', [SubscriptionsController::class, 'index'])->name('subscriptions.index');
+                    Route::get('/list', [SubscriptionsController::class, 'list'])->name('subscriptions.list');
+                    Route::get('/create', [SubscriptionsController::class, 'create'])->name('subscriptions.create');
+                    Route::post('/store', [SubscriptionsController::class, 'store'])->name('subscriptions.store');
+                    Route::get('/edit/{id}', [SubscriptionsController::class, 'edit'])->name('subscriptions.edit');
+                    Route::post('/update/{id}', [SubscriptionsController::class, 'update'])->name('subscriptions.update');
+                    Route::delete('/delete/{id}', [SubscriptionsController::class, 'delete'])->name('subscriptions.delete');
                 });
             });
 
             Route::middleware(['acl:manter-pagamentos'])->group(callback: function () {
                 Route::prefix('payments')->group(function () {
-                    Route::get('/', [PaymentsController::class, 'index'])->name('plan.index');
-                    Route::get('/list', [PaymentsController::class, 'list'])->name('plan.list');
-                    Route::get('/create', [PaymentsController::class, 'create'])->name('plan.create');
-                    Route::post('/store', [PaymentsController::class, 'store'])->name('plan.store');
-                    Route::get('/edit/{id}', [PaymentsController::class, 'edit'])->name('plan.edit');
-                    Route::post('/update/{id}', [PaymentsController::class, 'update'])->name('plan.update');
-                    Route::delete('/delete/{id}', [PaymentsController::class, 'delete'])->name('plan.delete');
+                    Route::get('/', [PaymentsController::class, 'index'])->name('payments.index');
+                    Route::get('/list', [PaymentsController::class, 'list'])->name('payments.list');
+                    Route::get('/create', [PaymentsController::class, 'create'])->name('payments.create');
+                    Route::post('/store', [PaymentsController::class, 'store'])->name('payments.store');
+                    Route::get('/edit/{id}', [PaymentsController::class, 'edit'])->name('payments.edit');
+                    Route::post('/update/{id}', [PaymentsController::class, 'update'])->name('payments.update');
+                    Route::delete('/delete/{id}', [PaymentsController::class, 'delete'])->name('payments.delete');
                 });
             });
         });

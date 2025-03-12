@@ -18,7 +18,7 @@
                 </div>
             </div>
         </div>
-        <div v-if="!patients.data.length" class="card-body text-center">
+        <div v-if="!plans.data.length" class="card-body text-center">
             <h5>Nenhum resultado encontrado</h5>
         </div>
         <div v-else class="card-body">
@@ -33,27 +33,21 @@
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">Nome</th>
-                            <th scope="col">E-mail</th>
-                            <th scope="col">Status</th>
                             <th scope="col">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="patient in patients.data" :key="patient.id">
-                            <th scope="row">{{ patient.id }}</th>
-                            <td>{{ patient.name }}</td>
-                            <td>{{ patient.email }}</td>
-                            <td>{{ patient.deleted_at ? 'Desativado' : 'Ativado' }}</td>
+                        <tr v-for="plan in plans.data" :key="plan.id">
+                            <th scope="row">{{ plan.id }}</th>
+                            <td>{{ plan.name }}</td>
                             <td>
                                 <a href="#">
-                                    <i class="fa-solid fa-pen-to-square text-warning"></i>
+                                    <i class="bi bi-pencil-square text-warning"></i>
                                 </a>
                                 &nbsp;&nbsp;&nbsp;
-                                <button type="button" class="btn p-0" @click="disablePatient(patient)"
-                                    data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                    <i v-if="patient.deleted_at"
-                                        class="fa-solid fa-circle-check text-success"></i>&nbsp;
-                                    <i v-else class="fa-solid fa-circle-xmark text-danger"></i>
+                                <button type="button" class="btn p-0" @click="deletePlan(plan)" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal">
+                                    <i class="bi bi-trash3 text-danger"></i>
                                 </button>
                             </td>
                         </tr>
@@ -61,10 +55,10 @@
                 </table>
             </div>
         </div>
-        <div class="card-footer" v-if="patients.data.length">
+        <div class="card-footer" v-if="plans.data.length">
             <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-center">
-                    <li v-for="(link, key) in patients.links" :key="key" class="page-item"
+                    <li v-for="(link, key) in plans.links" :key="key" class="page-item"
                         :class="{ 'active': link.active }">
                         <a class="page-link" href="#" @click.prevent="pagination(link.url)" v-html="link.label"></a>
                     </li>
@@ -101,35 +95,35 @@ export default {
     },
     data() {
         return {
-            patients: {
+            plans: {
                 data: [],
                 links: []
             },
             searchFilter: '',
-            patientToDisable: null,
+            planToDelete: null,
             alertStatus: null,
             msg: [],
             loading: null,
         };
     },
     mounted() {
-        this.getPatients();
+        this.getPlans();
     },
     methods: {
         pesquisar() {
-            this.getPatients('/patients/list', this.searchFilter);
+            this.getPlans('/admin/financial/plan/list', this.searchFilter);
         },
         pagination(url) {
             if (url) {
-                this.getPatients(url);
+                this.getPlans(url);
             }
         },
-        getPatients() {
+        getPlans() {
             this.loading = true;
-            let url = '/patients/list';
+            let url = '/admin/financial/plan/list';
             axios.get(url)
                 .then(response => {
-                    this.patients = response.data.patients;
+                    this.plans = response.data.plans;
                 })
                 .catch(errors => {
                     console.log(errors);
@@ -137,16 +131,16 @@ export default {
                     this.loading = false
                 });
         },
-        disablePatient(patient) {
-            this.patientToDisable = patient;
+        deletePlan(plan) {
+            this.planToDelete = plan;
         },
         disable() {
-            if (this.patientToDisable !== null) {
+            if (this.planToDelete !== null) {
                 this.loading = true;
-                axios.post('/patients/disable', { patient: this.patientToDisable })
+                axios.post('/plans/disable', { plan: this.planToDelete })
                     .then(response => {
-                        this.getPatients();
-                        this.patientToDisable = null;
+                        this.getPlans();
+                        this.planToDelete = null;
 
                         const modal = Modal.getInstance(document.getElementById('exampleModal'));
                         if (modal) {
