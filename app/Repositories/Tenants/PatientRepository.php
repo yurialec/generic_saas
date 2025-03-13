@@ -36,16 +36,7 @@ class PatientRepository implements PatientRepositoryInterface
     public function create(array $data): ?Patient
     {
         try {
-            $data['tenant_id'] = (int) session('tenant');
-
-            $patient = new Patient();
-            $patient->fill($data);
-
-            if ($patient->save()) {
-                return $patient;
-            }
-            return null;
-
+            return $this->patient->create($data);
         } catch (Exception $e) {
             Log::error('Erro ao criar paciente', ['error' => $e->getMessage()]);
             return null;

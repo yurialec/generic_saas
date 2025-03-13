@@ -2,9 +2,16 @@
 
 namespace App\Http\Controllers\Tenants;
 use App\Http\Controllers\Controller;
+use App\Services\Tenants\TenantService;
 
 class TenantController extends Controller
 {
+    protected $TenantService;
+
+    public function __construct(TenantService $TenantService)
+    {
+        $this->TenantService = $TenantService;
+    }
     public function getMenu()
     {
         return [
@@ -49,6 +56,21 @@ class TenantController extends Controller
     public function profile()
     {
         return view('tenant.profile.index');
+    }
+
+    public function viewProfile()
+    {
+        $profile = $this->TenantService->viewProfile();
+
+        if ($profile) {
+            return response()->json([
+                'profile' => $profile
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => $profile
+            ], 404);
+        }
     }
 
     public function reports()

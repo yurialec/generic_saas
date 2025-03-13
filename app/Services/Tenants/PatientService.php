@@ -20,6 +20,7 @@ class PatientService
 
     public function create(array $data)
     {
+        $data['tenant_id'] = session('tenant');
         return $this->PatientRepository->create($data);
     }
 

@@ -9,6 +9,8 @@ class Clients extends User
 {
     protected $table = 'users';
 
+    protected $with = ['tenant'];
+
     protected static function boot()
     {
         parent::boot();

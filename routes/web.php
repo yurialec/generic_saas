@@ -239,6 +239,7 @@ Route::prefix('{tenant}')->group(function () {
         Route::get('/get-menu', [TenantController::class, 'getMenu'])->name('tenant.getmenu');
         Route::get('/dashboard', [TenantController::class, 'dashboard'])->name('tenant.dashboard');
         Route::get('/profile', [TenantController::class, 'profile'])->name(name: 'tenant.profile');
+        Route::get('/view-profile', [TenantController::class, 'viewProfile'])->name(name: 'tenant.viewProfile');
 
         Route::prefix('finance')->group(function () {
             Route::get('/', [FinanceController::class, 'index'])->name('tenant.finance.index');

@@ -20,6 +20,7 @@ class Patient extends Model
         'emergency_contact',
         'emergency_phone',
         'payment_plan',
-        'notes'
+        'notes',
+        'tenant_id'
     ];
 }

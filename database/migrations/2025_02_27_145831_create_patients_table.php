@@ -37,8 +37,7 @@ return new class extends Migration {
             // Observações extras
             $table->text('notes')->nullable(); // Observações clínicas ou outras
 
-            $table->bigInteger('tenant_id')->unsigned()->index()->nullable();
-            $table->foreign('tenant_id')->references('id')->on('tenant')->onDelete('cascade');
+            $table->string('tenant_id')->nullable();
 
             $table->timestamps();
             $table->softDeletes(); // Exclusão suave

@@ -17,4 +17,9 @@ class TenantService
     {
         return $this->TenantRepository->all();
     }
+
+    public function viewProfile()
+    {
+        return $this->TenantRepository->viewProfile();
+    }
 }

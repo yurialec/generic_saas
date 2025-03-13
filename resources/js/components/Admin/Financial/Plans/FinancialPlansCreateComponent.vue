@@ -1,5 +1,11 @@
 <template>
-    <div class="card">
+    <div v-if="loading" class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <div v-else class="card">
         <div class="card-header">
             <h4>Cadastrar novo plano</h4>
         </div>
